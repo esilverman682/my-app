@@ -32,7 +32,7 @@ export default function Page() {
 
       <main className="content">
         <Hero
-          title="Get Started with Faust.js"
+          title="Financial Assistance For your Business"
           buttonText="Developer Docs"
           buttonURL="https://faustjs.org"
           button2Text="Faust.js on GitHub"

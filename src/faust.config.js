@@ -18,5 +18,5 @@ export default coreConfig({
 });
 
 nextConfig({
-  revalidate: 1, // 60 seconds
+  revalidate: .1, // 60 seconds
 });
