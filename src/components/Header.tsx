@@ -39,11 +39,11 @@ function Header({
               </li>
             ))}
             <li>
-              <Link href="https://github.com/wpengine/faustjs">
+              <Link href="https://master-my-app.vercel.app/">
                 <a
                   className="button"
-                  href="https://github.com/wpengine/faustjs">
-                  GitHub
+                  href="https://master-my-app.vercel.app/">
+                  APPLY NOW
                 </a>
               </Link>
             </li>
