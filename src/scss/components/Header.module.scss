@@ -90,7 +90,7 @@
 }
 
 .menu a:global(.button) {
-	background-color: $color-primary;
+	background-color: $color-light-green;
 	display: inline-block;
 	color: $color-white;
 	padding: 6px 16px;
@@ -99,6 +99,6 @@
 
 .menu a:global(.button):focus,
 .menu a:global(.button):hover {
-	background-color: lighten($color-primary, 10);
+	background-color: lighten($color-light-green, 10);
 	color: $color-white;
 }
