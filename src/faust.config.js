@@ -1,4 +1,6 @@
 import { config as coreConfig } from '@faustjs/core';
+
+// THIS IS FOR GLOBAL ISR
 import { config as nextConfig } from '@faustjs/next';
 
 
@@ -17,6 +19,7 @@ export default coreConfig({
   apiClientSecret: process.env.FAUSTWP_SECRET_KEY,
 });
 
+// THIS IS GLOBAL ISR
 nextConfig({
   revalidate: 1, // 60 seconds
 });

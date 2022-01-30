@@ -29,6 +29,10 @@ export function PostComponent({ post }: PostProps) {
         title={post?.title()}
         bgImage={post?.featuredImage?.node?.sourceUrl()}
       />
+      <Hero
+        title={post?.title()}
+        bgImage={post?.featuredImage?.node?.sourceUrl()}
+      />
 
       <main className="content content-single">
         <div className="wrap">

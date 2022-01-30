@@ -9,7 +9,7 @@ interface Props {
 }
 
 function Header({
-  title = 'Headless by WP Engine',
+  title = 'Headless Kap',
   description,
 }: Props): JSX.Element {
   const { menuItems } = client.useQuery()
