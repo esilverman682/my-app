@@ -14,7 +14,8 @@ function Header({
 }: Props): JSX.Element {
   const { menuItems } = client.useQuery()
   const links = menuItems({
-    where: { location: MenuLocationEnum.PRIMARY },
+    // HEADER MENU NAVIGATION NAME IS -->  HCMS_MENU_HEADER THE FOOTER IS --> HCMS_MENU_FOOTER
+    where: { location: MenuLocationEnum.HCMS_MENU_HEADER },
   }).nodes;
 
   return (
