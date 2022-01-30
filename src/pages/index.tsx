@@ -33,10 +33,10 @@ export default function Page() {
       <main className="content">
         <Hero
           title="Financial Assistance For your Business"
-          buttonText="Developer Docs"
-          buttonURL="https://faustjs.org"
-          button2Text="Faust.js on GitHub"
-          button2URL="https://github.com/wpengine/faustjs"
+          buttonText="GET STARTED"
+          buttonURL="https://example.com"
+          button2Text="2nd Button"
+          button2URL="https://example.com"
           bgImage="/images/headless_hero_background.jpg"
           id={styles.home_hero}
         >
@@ -57,7 +57,7 @@ export default function Page() {
         </Hero>
         <section className={styles.explore}>
           <div className="wrap">
-            <h2>Explore this Example Project</h2>
+            <h2>Explore this Example Projects</h2>
             <p>
               This headless example project uses{' '}
               <a href="https://nextjs.org/">Next.js</a>,{' '}
