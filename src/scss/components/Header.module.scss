@@ -78,7 +78,7 @@
 }
 
 .menu a {
-	color: $color-dark-gray;
+	color: $color-white;
 	font-family: $font-family;
 	font-weight: $font-weight-bold;
 	text-decoration: none;
@@ -86,7 +86,7 @@
 
 .menu a:focus,
 .menu a:hover {
-	color: $color-primary;
+	color: $color-white;
 }
 
 .menu a:global(.button) {
