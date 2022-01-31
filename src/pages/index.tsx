@@ -32,27 +32,31 @@ export default function Page() {
 
       <main className="content">
         <Hero
-          title="Financial Assistance For your Business"
+          title="Business Loan Financing to: "
           buttonText="GET STARTED"
           buttonURL="https://example.com"
-          button2Text="2nd Button"
-          button2URL="https://example.com"
+    //    button2Text="2nd Button"
+    //    button2URL="https://example.com"
           bgImage="/images/headless_hero_background.jpg"
           id={styles.home_hero}
         >
+
+ 
+
+
           <p>
-            WP&nbsp;Engine’s Faust.js Framework includes this example
-            project, the{' '}
-            <a href="https://wordpress.org/plugins/faustwp/">
-              FaustWP plugin
+            Lorem&nbsp;s Ipsum is simply dummy text of the printing and typesetting industry. 
+            standard dummy text ever since the 1500s, when an unknown printer took a galley{' '}
+            <a href="https://master-my-app.vercel.app/">
+              Unknown printer
             </a>
             ,{' '}
-            <a href="https://github.com/wpengine/faustjs">headless packages</a>,
+            <a href="https://master-my-app.vercel.app/">unknown printer</a>,
             and{' '}
-            <a href="https://faustjs.org/docs/tutorial/dev-env-setup">
-              tutorials
+            <a href="https://master-my-app.vercel.app/">
+            since the 1500s
             </a>{' '}
-            to make building headless WordPress sites fast and fun.
+            software like Aldus PageMaker including versions of Lorem Ipsum.
           </p>
         </Hero>
         <section className={styles.explore}>
@@ -63,7 +67,7 @@ export default function Page() {
               <a href="https://nextjs.org/">Next.js</a>,{' '}
               <a href="https://graphql.org/">GraphQL</a>,{' '}
               <a href="https://gqty.dev">GQty</a> and the{' '}
-              <a href="https://github.com/wpengine/faustjs">
+              <a href="https://master-my-app.vercel.app/">
                 WP&nbsp;Engine headless packages
               </a>{' '}
               for WordPress integration. Dive in and edit this template at{' '}
@@ -104,7 +108,7 @@ export default function Page() {
               <div className={styles.feature}>
                 <h3>Ready for Atlas</h3>
                 <p>
-                  <a href="https://wpengine.com/atlas">Atlas</a> is the complete
+                  <a href="https://master-my-app.vercel.app">Atlas</a> is the complete
                   Headless WordPress Platform for absurdly fast dynamic sites.
                   One headless solution, one price, all in one place.
                   <br />
@@ -143,7 +147,7 @@ export default function Page() {
                   Add or edit components in the <code>src/components</code>{' '}
                   folder. Find component styles at{' '}
                   <code>src/scss/components</code>, which use{' '}
-                  <a href="https://nextjs.org/docs/basic-features/built-in-css-support#adding-component-level-css">
+                  <a href="https://master-my-app.vercel.app">
                     CSS modules
                   </a>{' '}
                   to scope CSS to each component.
@@ -163,12 +167,12 @@ export default function Page() {
         <CTA
           title="Questions or comments?"
           buttonText="Join the discussion on GitHub"
-          buttonURL="https://github.com/wpengine/faustjs/discussions"
+          buttonURL="https://master-my-app.vercel.app/discussions"
           headingLevel="h2"
         >
           <p>
             We welcome feature requests, bug reports and questions in the{' '}
-            <a href="https://github.com/wpengine/faustjs">
+            <a href="https://master-my-app.vercel.app/">
               Headless Framework GitHub repository
             </a>
             .
