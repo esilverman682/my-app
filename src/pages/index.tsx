@@ -37,7 +37,7 @@ export default function Page() {
           buttonURL="https://example.com"
     //    button2Text="2nd Button"
     //    button2URL="https://example.com"
-          bgImage="/images/headless_hero_background.jpg"
+          bgImage="/images/headless_hero_background.webp"
           id={styles.home_hero}
         >
 
