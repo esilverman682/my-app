@@ -6,12 +6,49 @@ import React from 'react';
 import { CTA, Footer, Header, Hero, Posts } from 'components';
 import styles from 'scss/pages/home.module.scss';
 import { client } from 'client';
+import Typewriter from 'typewriter-effect';
+import { useState } from 'react';
+export function TypingEffect() {
+
+  const [state] = useState ({
+    title: '',
+    titleTwo: '',
+    titleThree: '',
+  })
+  return (
+    <div className={styles.text}>
+      <div className='title'>{state.title}</div>
+      <div className='titleTwo'>{state.titleTwo}</div>
+      <div className='titleThree'>{state.titleThree}</div>
+      <Typewriter
+
+        options={{ 
+     
+          autoStart: true,
+          loop: true,
+          delay: 70,
+          strings: [
+            "run your business",
+            "grow your business",
+            "secure your business",
+            "renovate",
+            "get new equipment",
+            "pay my taxes",
+            "move to a new location",
+            "purchase inventory",
+            "run marketing campaigns",
+          ],
+        }}
+      />
+    </div>
+  );
+}
 
 export default function Page() {
   const { usePosts, useQuery } = client;
   const generalSettings = useQuery().generalSettings;
   const posts = usePosts({
-    first: 6,
+    first: 10,
     where: {
       categoryName: 'uncategorized',
     },
@@ -35,29 +72,13 @@ export default function Page() {
           title="Business Loan Financing to: "
           buttonText="GET STARTED"
           buttonURL="https://example.com"
-    //    button2Text="2nd Button"
-    //    button2URL="https://example.com"
+          //button2Text="2nd Button"
+          //button2URL="https://example.com"
           bgImage="/images/headless_hero_background.webp"
           id={styles.home_hero}
+          
         >
-
- 
-
-
-          <p>
-            Lorem&nbsp;s Ipsum is simply dummy text of the printing and typesetting industry. 
-            standard dummy text ever since the 1500s, when an unknown printer took a galley{' '}
-            <a href="https://master-my-app.vercel.app/">
-              Unknown printer
-            </a>
-            ,{' '}
-            <a href="https://master-my-app.vercel.app/">unknown printer</a>,
-            and{' '}
-            <a href="https://master-my-app.vercel.app/">
-            since the 1500s
-            </a>{' '}
-            software like Aldus PageMaker including versions of Lorem Ipsum.
-          </p>
+          <TypingEffect></TypingEffect>
         </Hero>
         <section className={styles.explore}>
           <div className="wrap">

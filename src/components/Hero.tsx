@@ -36,7 +36,7 @@ function Hero({
             <p>
               <a href={buttonURL} className="button">
                 {buttonText}
-              </a>
+              </a>  
             </p>
           )}
           {button2Text && button2URL && (
@@ -46,6 +46,13 @@ function Hero({
               </a>
             </p>
           )}
+          <p>
+            Questions?{' '}
+              <a href="#" className=" ">
+                (800) 780-7133
+              </a>
+          </p>          
+             
         </div>
       </div>
     </section>

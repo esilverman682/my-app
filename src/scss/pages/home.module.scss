@@ -2,6 +2,28 @@
 
 @import "scss/variables";
 
+//Typewriter
+.title {
+	animation-name: moveRight;
+	animation-duration: 0.7s;
+}
+.titleTwo {
+	animation-name: moveRight;
+	animation-duration: 0.7s;
+}
+.titleThree {
+	animation-name: moveRight;
+	animation-duration: 0.7s;
+	color: #fbff00;
+	margin-bottom: 10px;
+}
+.text {
+ 	font-size: 3.5em;
+	font-weight: 500;
+	color: $color-white;
+	margin-bottom: 20px;
+}
+
 .explore {
 	margin: 5em 0 5em;
 }
@@ -14,7 +36,8 @@
 @media screen and (min-width: $breakpoint-medium) {
 	#home_hero h1 {
 //		max-width: 40%; // Reduced from 80% on the front-page only to wrap the headline.
-		max-width: 63%; // Reduced from 80% on the front-page only to wrap the headline.
+		max-width: 100%; // Reduced from 80% on the front-page only to wrap the headline.
+		margin-bottom: 0;
 	}
 
 	.features {

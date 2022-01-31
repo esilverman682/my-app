@@ -99,9 +99,9 @@
 .menu a:global(.button) {
 	background-color: $color-light-green;
 	display: inline-block;
-	color: $color-white;
+	color: $color-primary;
 	padding: 6px 16px;
-	border-radius: 4px;
+	border-radius: 0px;
 }
 
 .menu a:global(.button):focus,
