@@ -9,6 +9,8 @@ interface Props {
   buttonURL?: string;
   button2Text?: string;
   button2URL?: string;
+  description?: string;
+  phone?: string;
   children?: React.ReactNode;
 }
 
@@ -20,6 +22,8 @@ function Hero({
   buttonURL,
   button2Text,
   button2URL,
+  description,
+  phone,
   children,
 }: Props): JSX.Element {
   return (
@@ -46,13 +50,11 @@ function Hero({
               </a>
             </p>
           )}
-          <p>
-            Questions?{' '}
-              <a href="#" className=" ">
-                (800) 780-7133
-              </a>
-          </p>          
-             
+          <p>{description}{' '}
+            <a href="#">
+              {phone}
+            </a>
+            </p>
         </div>
       </div>
     </section>

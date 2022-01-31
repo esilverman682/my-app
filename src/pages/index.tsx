@@ -76,9 +76,11 @@ export default function Page() {
           //button2URL="https://example.com"
           bgImage="/images/headless_hero_background.webp"
           id={styles.home_hero}
-          
+          description="Questions"
+          phone="(800) 780-7133"
         >
           <TypingEffect></TypingEffect>
+
         </Hero>
         <section className={styles.explore}>
           <div className="wrap">
