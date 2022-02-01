@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from 'scss/components/Hero.module.scss';
-import { motion } from "framer-motion";
+ 
 interface Props {
   title: string;
   id?: string;
@@ -33,12 +33,9 @@ function Hero({
       style={{ backgroundImage: bgImage ? `url(${bgImage})` : 'none' }}
       className={styles.hero}>
       <div className={styles.wrap}>
-        <motion.h1
-         className="title has-text-weight-bold is-1 is-size-2-mobile is-spaced"
-         layoutId="title"     
-        >              
+        <h1>              
          {title}
-        </motion.h1>
+        </h1>
         <div className={styles.intro}>
           <div className={styles.children}>{children}</div>
           {buttonText && buttonURL && (
@@ -55,17 +52,12 @@ function Hero({
               </a>
             </p>
           )}
-          <motion.p
-                className="subtitle"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.2 }}
-              >
-                {description}{' '}
+          <p>
+            {description}{' '}
             <a href="#">
               {phone}
             </a>
-          </motion.p>
+          </p>
         </div>
       </div>
     </section>

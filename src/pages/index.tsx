@@ -60,7 +60,15 @@ export default function Page() {
   
   return (
     <>
-
+      <Header
+        title={generalSettings.title}
+        description={generalSettings.description}
+      />
+      <Head>
+        <title>
+          {generalSettings.title} - {generalSettings.description}
+        </title>
+      </Head>
       <main className="content">
         <Hero
           title="Business Loan Financing to: "
