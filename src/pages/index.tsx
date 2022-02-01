@@ -1,12 +1,17 @@
 import { getNextStaticProps } from '@faustjs/next';
 import { GetStaticPropsContext } from 'next';
 import Head from 'next/head';
-import React from 'react';
 import { CTA, Footer, Header, Hero, Posts } from 'components';
 import styles from 'scss/pages/home.module.scss';
 import { client, HomecolumnIdType } from 'client';
 import Typewriter from 'typewriter-effect';
 import { useState } from 'react';
+import dynamic from "next/dynamic";
+
+
+const renderLoader = () => <p>Loading</p>;
+
+ 
 //import HomeColumn from '../components/HomeColumn';
 
 export function TypingEffect() {
@@ -41,8 +46,10 @@ export function TypingEffect() {
     </div>
   );
 }
+const DynamicComponent = dynamic(() => import('../components/Header'))
 
 export default function Page() {
+  
   const { usePosts, useQuery } = client;
   const generalSettings = useQuery().generalSettings;
   const posts = usePosts({
@@ -69,6 +76,7 @@ export default function Page() {
           {generalSettings.title} - {generalSettings.description}
         </title>
       </Head>
+      <DynamicComponent />
       <main className="content">
         <Hero
           title="Business Loan Financing to: "
