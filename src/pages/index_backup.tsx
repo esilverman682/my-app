@@ -123,31 +123,69 @@ export default function Page() {
                   </a>
                 </p>
               </div>
+
               <div className={styles.feature}>
-                <h3>Incremental Static Regeneration</h3>
+                <h3>Ready for Atlas</h3>
                 <p>
-                  This example project uses Next.js&apos;{' '}
-                  <a href="https://vercel.com/docs/concepts/next.js/incremental-static-regeneration">
-                    Incremental Static Regeneration (ISR)
-                  </a>
-                  . This allows you to revalidate static pages without having to
-                  rebuild your entire site. By default, Faust.js sets a{' '}
-                  <strong>
-                    15 minute <code>revalidate</code> time per page.
-                  </strong>{' '}
+                  <a href="https://master-my-app.vercel.app">Atlas</a> is the complete
+                  Headless WordPress Platform for absurdly fast dynamic sites.
+                  One headless solution, one price, all in one place.
                   <br />
-                  <a href="https://faustjs.org/docs/next/guides/ssr-ssg#setting-up-incremental-static-regeneration-isr">
-                    Learn more about how Faust.js uses ISR.
-                  </a>
+                </p>
+              </div>
+            </div>
+            <div className={styles.features}>
+              <div className={styles.feature}>
+                <h3>Global Styles and Fonts</h3>
+                <p>
+                  Add styles to load on every page, such as typography and
+                  layout rules, in <code>src/scss/main.scss</code>. The project
+                  adds{' '}
+                  <a href="https://necolas.github.io/normalize.css/">
+                    normalize.css
+                  </a>{' '}
+                  in <code>src/pages/_app.tsx</code>. Google Fonts are enqueued
+                  in <code>src/pages/_document.tsx</code>.
+                </p>
+              </div>
+
+              <div className={styles.feature}>
+                <h3>Hooks</h3>
+                <p>
+                  Fetch data from WordPress with <code>usePost</code>,{' '}
+                  <code>usePosts</code>, <code>useGeneralSettings</code> and
+                  other custom hooks. Use these hooks in your page templates to
+                  pass data to custom components. See{' '}
+                  <code>src/pages/index.tsx</code> for examples.
+                </p>
+              </div>
+
+              <div className={styles.feature}>
+                <h3>Components</h3>
+                <p>
+                  Add or edit components in the <code>src/components</code>{' '}
+                  folder. Find component styles at{' '}
+                  <code>src/scss/components</code>, which use{' '}
+                  <a href="https://master-my-app.vercel.app">
+                    CSS modules
+                  </a>{' '}
+                  to scope CSS to each component.
                 </p>
               </div>
             </div>
           </div>
         </section>
- 
+        <Posts
+          posts={posts.nodes}
+          heading="Latest Posts"
+          intro="The Posts component in src/pages/index.tsx shows the latest six posts from the connected WordPress site."
+          headingLevel="h2"
+          postTitleLevel="h3"
+          id={styles.post_list}
+        />
         <CTA
           title="Questions or comments?"
-          buttonText="Contact Us"
+          buttonText="Join the discussion on GitHub"
           buttonURL="https://master-my-app.vercel.app/discussions"
           headingLevel="h2"
         >
