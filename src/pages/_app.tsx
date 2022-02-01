@@ -5,15 +5,15 @@ import React from 'react';
 import 'scss/main.scss';
 import { client } from 'client';
 import type { AppProps } from 'next/app';
-import { AnimateSharedLayout } from "framer-motion"
+ 
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <FaustProvider client={client} pageProps={pageProps}>
-        <AnimateSharedLayout>
+      
           <Component {...pageProps} />
-        </AnimateSharedLayout>
+    
       </FaustProvider>
     </>
   );
