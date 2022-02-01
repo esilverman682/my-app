@@ -21,7 +21,7 @@ function Header({
   }).nodes;
 
   return (
-    <header>
+    <header className="headerz">
     
       <div className={styles.wrap}>
         <div className={styles['title-wrap']}>
