@@ -5,7 +5,7 @@ import { GetStaticPropsContext } from 'next';
 import { useRouter } from 'next/router';
 import { client } from 'client';
 
-const POSTS_PER_PAGE = 6;
+const POSTS_PER_PAGE = 9;
 
 export default function Page() {
   const { useQuery, usePosts, useCategory } = client;

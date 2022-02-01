@@ -6,11 +6,13 @@ import { client, MenuLocationEnum } from 'client';
 interface Props {
   title?: string;
   description?: string;
+ 
 }
 
 function Header({
   title = 'Headless Kap',
   description,
+ 
 }: Props): JSX.Element {
   const { menuItems } = client.useQuery()
   const links = menuItems({
@@ -20,6 +22,7 @@ function Header({
 
   return (
     <header>
+    
       <div className={styles.wrap}>
         <div className={styles['title-wrap']}>
           <p className={styles['site-title']}>

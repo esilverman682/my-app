@@ -1,5 +1,4 @@
 import { getNextStaticProps } from '@faustjs/next';
-
 import { GetStaticPropsContext } from 'next';
 import Head from 'next/head';
 import React from 'react';
@@ -8,8 +7,8 @@ import styles from 'scss/pages/home.module.scss';
 import { client } from 'client';
 import Typewriter from 'typewriter-effect';
 import { useState } from 'react';
-export function TypingEffect() {
 
+export function TypingEffect() {
   const [state] = useState ({
     title: '',
     titleTwo: '',
@@ -21,9 +20,7 @@ export function TypingEffect() {
       <div className='titleTwo'>{state.titleTwo}</div>
       <div className='titleThree'>{state.titleThree}</div>
       <Typewriter
-
         options={{ 
-     
           autoStart: true,
           loop: true,
           delay: 70,
@@ -48,7 +45,7 @@ export default function Page() {
   const { usePosts, useQuery } = client;
   const generalSettings = useQuery().generalSettings;
   const posts = usePosts({
-    first: 10,
+    first:9,
     where: {
       categoryName: 'uncategorized',
     },
@@ -60,13 +57,11 @@ export default function Page() {
         title={generalSettings.title}
         description={generalSettings.description}
       />
-
       <Head>
         <title>
           {generalSettings.title} - {generalSettings.description}
         </title>
       </Head>
-
       <main className="content">
         <Hero
           title="Business Loan Financing to: "
@@ -80,11 +75,12 @@ export default function Page() {
           phone="(800) 780-7133"
         >
           <TypingEffect></TypingEffect>
-
         </Hero>
         <section className={styles.explore}>
           <div className="wrap">
-            <h2>Explore this Example Projects</h2>
+            <h2>
+              Explore this Example Projects 
+            </h2>
             <p>
               This headless example project uses{' '}
               <a href="https://nextjs.org/">Next.js</a>,{' '}
@@ -202,6 +198,7 @@ export default function Page() {
           </p>
         </CTA>
       </main>
+     
       <Footer copyrightHolder={generalSettings.title} />
     </>
   );

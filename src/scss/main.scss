@@ -10,6 +10,8 @@ body {
 }
 header {
 	background-color: $color-primary;
+	border-bottom: 1px solid $color-white;
+	border-top: 1px solid $color-white;
 }
 .wrap {
 	margin: 0 auto;
