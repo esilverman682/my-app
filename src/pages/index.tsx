@@ -7,7 +7,7 @@ import styles from 'scss/pages/home.module.scss';
 import { client, HomecolumnIdType } from 'client';
 import Typewriter from 'typewriter-effect';
 import { useState } from 'react';
-import HomeColumn from '../components/HomeColumn';
+//import HomeColumn from '../components/HomeColumn';
 
 export function TypingEffect() {
   const [state] = useState ({
@@ -84,14 +84,7 @@ export default function Page() {
           <TypingEffect></TypingEffect>
         </Hero>
     
-  
-        <main className="content content-single">
-        <div className="wrap post_list">
-          <h2>Team Members</h2>
-          {homecolumn.map((homecolumns) => (
-          <HomeColumn key={homecolumns.id} Homecolumn={homecolumns} />))}
-        </div>
-      </main>
+ 
  
         <CTA
           title="Questions or comments?"
