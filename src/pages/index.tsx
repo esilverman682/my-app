@@ -6,12 +6,9 @@ import styles from 'scss/pages/home.module.scss';
 import { client, HomecolumnIdType } from 'client';
 import Typewriter from 'typewriter-effect';
 import { useState } from 'react';
-import dynamic from "next/dynamic";
-
-
-const renderLoader = () => <p>Loading</p>;
-
  
+
+
 //import HomeColumn from '../components/HomeColumn';
 
 export function TypingEffect() {
@@ -46,8 +43,7 @@ export function TypingEffect() {
     </div>
   );
 }
-const DynamicComponent = dynamic(() => import('../components/Header'))
-
+ 
 export default function Page() {
   
   const { usePosts, useQuery } = client;
@@ -76,7 +72,7 @@ export default function Page() {
           {generalSettings.title} - {generalSettings.description}
         </title>
       </Head>
-      <DynamicComponent />
+
       <main className="content">
         <Hero
           title="Business Loan Financing to: "
@@ -89,6 +85,7 @@ export default function Page() {
           description="Questions"
           phone="(800) 780-7133"
         >
+
           <TypingEffect></TypingEffect>
         </Hero>
     
