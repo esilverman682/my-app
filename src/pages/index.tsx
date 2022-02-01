@@ -4,9 +4,10 @@ import Head from 'next/head';
 import React from 'react';
 import { CTA, Footer, Header, Hero, Posts } from 'components';
 import styles from 'scss/pages/home.module.scss';
-import { client } from 'client';
+import { client, HomecolumnIdType } from 'client';
 import Typewriter from 'typewriter-effect';
 import { useState } from 'react';
+import HomeColumn from '../components/HomeColumn';
 
 export function TypingEffect() {
   const [state] = useState ({
@@ -50,7 +51,13 @@ export default function Page() {
       categoryName: 'uncategorized',
     },
   });
-
+  interface Props {
+    homecolumn?: string;
+    id?: string;
+  }
+  
+  const homecolumn = useQuery().homecolumns()?.nodes;
+  
   return (
     <>
       <Header
@@ -76,79 +83,20 @@ export default function Page() {
         >
           <TypingEffect></TypingEffect>
         </Hero>
-        <section className={styles.explore}>
-          <div className="wrap">
-            <h2>
-              Explore this Example Projects 
-            </h2>
-            <p>
-              This headless example project uses{' '}
-              <a href="https://nextjs.org/">Next.js</a>,{' '}
-              <a href="https://graphql.org/">GraphQL</a>,{' '}
-              <a href="https://gqty.dev">GQty</a> and the{' '}
-              <a href="https://master-my-app.vercel.app/">
-                WP&nbsp;Engine headless packages
-              </a>{' '}
-              for WordPress integration. Dive in and edit this template at{' '}
-              <code>src/pages/index.tsx</code> or discover more below.
-            </p>
-            <div className={styles.features}>
-              <div className={styles.feature}>
-                <h3>Static Site Generation</h3>
-                <p>
-                  This example project uses Next.js&apos;{' '}
-                  <a href="https://nextjs.org/docs/basic-features/pages#two-forms-of-pre-rendering">
-                    Static Site Generation (SSR)
-                  </a>
-                  . SSG unlocks better performance by statically generating
-                  pages that can then be cached by a CDN.
-                </p>
-              </div>
-
-              <div className={styles.feature}>
-                <h3>Incremental Static Regeneration</h3>
-                <p>
-                  This example project uses Next.js&apos;{' '}
-                  <a href="https://vercel.com/docs/concepts/next.js/incremental-static-regeneration">
-                    Incremental Static Regeneration (ISR)
-                  </a>
-                  . This allows you to revalidate static pages without having to
-                  rebuild your entire site. By default, Faust.js sets a{' '}
-                  <strong>
-                    15 minute <code>revalidate</code> time per page.
-                  </strong>{' '}
-                  <br />
-                  <a href="https://faustjs.org/docs/next/guides/ssr-ssg#setting-up-incremental-static-regeneration-isr">
-                    Learn more about how Faust.js uses ISR.
-                  </a>
-                </p>
-              </div>
-              <div className={styles.feature}>
-                <h3>Incremental Static Regeneration</h3>
-                <p>
-                  This example project uses Next.js&apos;{' '}
-                  <a href="https://vercel.com/docs/concepts/next.js/incremental-static-regeneration">
-                    Incremental Static Regeneration (ISR)
-                  </a>
-                  . This allows you to revalidate static pages without having to
-                  rebuild your entire site. By default, Faust.js sets a{' '}
-                  <strong>
-                    15 minute <code>revalidate</code> time per page.
-                  </strong>{' '}
-                  <br />
-                  <a href="https://faustjs.org/docs/next/guides/ssr-ssg#setting-up-incremental-static-regeneration-isr">
-                    Learn more about how Faust.js uses ISR.
-                  </a>
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
+    
+  
+        <main className="content content-single">
+        <div className="wrap post_list">
+          <h2>Team Members</h2>
+          {homecolumn.map((homecolumns) => (
+          <HomeColumn key={homecolumns.id} Homecolumn={homecolumns} />))}
+        </div>
+      </main>
  
         <CTA
           title="Questions or comments?"
           buttonText="Contact Us"
-          buttonURL="https://master-my-app.vercel.app/discussions"
+          buttonURL="https://master-my-app.vercel.app/contact-us"
           headingLevel="h2"
         >
           <p>

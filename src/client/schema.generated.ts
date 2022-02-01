@@ -375,6 +375,8 @@ export enum ContentTypeEnum {
   /** The Type of Content object */
   ATTACHMENT = "ATTACHMENT",
   /** The Type of Content object */
+  HOMECOLUMN = "HOMECOLUMN",
+  /** The Type of Content object */
   PAGE = "PAGE",
   /** The Type of Content object */
   POST = "POST",
@@ -496,6 +498,26 @@ export interface CreateCommentInput {
   parent?: InputMaybe<Scalars["ID"]>;
   /** Type of comment. */
   type?: InputMaybe<Scalars["String"]>;
+}
+
+/** Input for the createHomecolumn mutation */
+export interface CreateHomecolumnInput {
+  /** The userId to assign as the author of the object */
+  authorId?: InputMaybe<Scalars["ID"]>;
+  /** This is an ID that can be passed to a mutation by the client to track the progress of mutations and catch possible duplicate mutation submissions. */
+  clientMutationId?: InputMaybe<Scalars["String"]>;
+  /** The date of the object. Preferable to enter as year/month/day (e.g. 01/31/2017) as it will rearrange date as fit if it is not specified. Incomplete dates may have unintended results for example, "2017" as the input will use current date with timestamp 20:17  */
+  date?: InputMaybe<Scalars["String"]>;
+  /** A field used for ordering posts. This is typically used with nav menu items or for special ordering of hierarchical content types. */
+  menuOrder?: InputMaybe<Scalars["Int"]>;
+  /** The password used to protect the content of the object */
+  password?: InputMaybe<Scalars["String"]>;
+  /** The slug of the object */
+  slug?: InputMaybe<Scalars["String"]>;
+  /** The status of the object */
+  status?: InputMaybe<PostStatusEnum>;
+  /** The title of the object */
+  title?: InputMaybe<Scalars["String"]>;
 }
 
 /** Input for the createMediaItem mutation */
@@ -826,6 +848,16 @@ export interface DeleteCommentInput {
   id: Scalars["ID"];
 }
 
+/** Input for the deleteHomecolumn mutation */
+export interface DeleteHomecolumnInput {
+  /** This is an ID that can be passed to a mutation by the client to track the progress of mutations and catch possible duplicate mutation submissions. */
+  clientMutationId?: InputMaybe<Scalars["String"]>;
+  /** Whether the object should be force deleted instead of being moved to the trash */
+  forceDelete?: InputMaybe<Scalars["Boolean"]>;
+  /** The ID of the homecolumn to delete */
+  id: Scalars["ID"];
+}
+
 /** Input for the deleteMediaItem mutation */
 export interface DeleteMediaItemInput {
   /** This is an ID that can be passed to a mutation by the client to track the progress of mutations and catch possible duplicate mutation submissions. */
@@ -1022,6 +1054,18 @@ export interface HierarchicalContentNodeToContentNodeChildrenConnectionWhereArgs
   status?: InputMaybe<PostStatusEnum>;
   /** Title of the object */
   title?: InputMaybe<Scalars["String"]>;
+}
+
+/** The Type of Identifier used to fetch a single resource. Default is ID. */
+export enum HomecolumnIdType {
+  /** Identify a resource by the Database ID. */
+  DATABASE_ID = "DATABASE_ID",
+  /** Identify a resource by the (hashed) Global ID. */
+  ID = "ID",
+  /** Identify a resource by the slug. Available to non-hierarchcial Types where the slug is a unique identifier. */
+  SLUG = "SLUG",
+  /** Identify a resource by the URI. */
+  URI = "URI",
 }
 
 /** The Type of Identifier used to fetch a single resource. Default is ID. */
@@ -1314,6 +1358,8 @@ export enum MimeTypeEnum {
   IMAGE_JPEG = "IMAGE_JPEG",
   /** MimeType image/png */
   IMAGE_PNG = "IMAGE_PNG",
+  /** MimeType image/svg+xml */
+  IMAGE_SVG_XML = "IMAGE_SVG_XML",
   /** MimeType image/tiff */
   IMAGE_TIFF = "IMAGE_TIFF",
   /** MimeType image/webp */
@@ -1752,8 +1798,6 @@ export interface PostPostFormatsNodeInput {
 
 /** The status of the object. */
 export enum PostStatusEnum {
-  /** Objects with the acf-disabled status */
-  ACF_DISABLED = "ACF_DISABLED",
   /** Objects with the auto-draft status */
   AUTO_DRAFT = "AUTO_DRAFT",
   /** Objects with the draft status */
@@ -2644,6 +2688,52 @@ export interface RootQueryToContentRevisionUnionConnectionWhereArgs {
   title?: InputMaybe<Scalars["String"]>;
 }
 
+/** Arguments for filtering the RootQueryToHomecolumnConnection connection */
+export interface RootQueryToHomecolumnConnectionWhereArgs {
+  /** The user that's connected as the author of the object. Use the userId for the author object. */
+  author?: InputMaybe<Scalars["Int"]>;
+  /** Find objects connected to author(s) in the array of author's userIds */
+  authorIn?: InputMaybe<Array<InputMaybe<Scalars["ID"]>>>;
+  /** Find objects connected to the author by the author's nicename */
+  authorName?: InputMaybe<Scalars["String"]>;
+  /** Find objects NOT connected to author(s) in the array of author's userIds */
+  authorNotIn?: InputMaybe<Array<InputMaybe<Scalars["ID"]>>>;
+  /** Filter the connection based on dates */
+  dateQuery?: InputMaybe<DateQueryInput>;
+  /** True for objects with passwords; False for objects without passwords; null for all objects with or without passwords */
+  hasPassword?: InputMaybe<Scalars["Boolean"]>;
+  /** Specific ID of the object */
+  id?: InputMaybe<Scalars["Int"]>;
+  /** Array of IDs for the objects to retrieve */
+  in?: InputMaybe<Array<InputMaybe<Scalars["ID"]>>>;
+  /** Get objects with a specific mimeType property */
+  mimeType?: InputMaybe<MimeTypeEnum>;
+  /** Slug / post_name of the object */
+  name?: InputMaybe<Scalars["String"]>;
+  /** Specify objects to retrieve. Use slugs */
+  nameIn?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  /** Specify IDs NOT to retrieve. If this is used in the same query as "in", it will be ignored */
+  notIn?: InputMaybe<Array<InputMaybe<Scalars["ID"]>>>;
+  /** What paramater to use to order the objects by. */
+  orderby?: InputMaybe<Array<InputMaybe<PostObjectsConnectionOrderbyInput>>>;
+  /** Use ID to return only children. Use 0 to return only top-level items */
+  parent?: InputMaybe<Scalars["ID"]>;
+  /** Specify objects whose parent is in an array */
+  parentIn?: InputMaybe<Array<InputMaybe<Scalars["ID"]>>>;
+  /** Specify posts whose parent is not in an array */
+  parentNotIn?: InputMaybe<Array<InputMaybe<Scalars["ID"]>>>;
+  /** Show posts with a specific password. */
+  password?: InputMaybe<Scalars["String"]>;
+  /** Show Posts based on a keyword search */
+  search?: InputMaybe<Scalars["String"]>;
+  /** Retrieve posts where post status is in an array. */
+  stati?: InputMaybe<Array<InputMaybe<PostStatusEnum>>>;
+  /** Show posts with a specific status. */
+  status?: InputMaybe<PostStatusEnum>;
+  /** Title of the object */
+  title?: InputMaybe<Scalars["String"]>;
+}
+
 /** Arguments for filtering the RootQueryToMediaItemConnection connection */
 export interface RootQueryToMediaItemConnectionWhereArgs {
   /** The user that's connected as the author of the object. Use the userId for the author object. */
@@ -3436,6 +3526,28 @@ export interface UpdateCommentInput {
   type?: InputMaybe<Scalars["String"]>;
 }
 
+/** Input for the updateHomecolumn mutation */
+export interface UpdateHomecolumnInput {
+  /** The userId to assign as the author of the object */
+  authorId?: InputMaybe<Scalars["ID"]>;
+  /** This is an ID that can be passed to a mutation by the client to track the progress of mutations and catch possible duplicate mutation submissions. */
+  clientMutationId?: InputMaybe<Scalars["String"]>;
+  /** The date of the object. Preferable to enter as year/month/day (e.g. 01/31/2017) as it will rearrange date as fit if it is not specified. Incomplete dates may have unintended results for example, "2017" as the input will use current date with timestamp 20:17  */
+  date?: InputMaybe<Scalars["String"]>;
+  /** The ID of the homecolumn object */
+  id: Scalars["ID"];
+  /** A field used for ordering posts. This is typically used with nav menu items or for special ordering of hierarchical content types. */
+  menuOrder?: InputMaybe<Scalars["Int"]>;
+  /** The password used to protect the content of the object */
+  password?: InputMaybe<Scalars["String"]>;
+  /** The slug of the object */
+  slug?: InputMaybe<Scalars["String"]>;
+  /** The status of the object */
+  status?: InputMaybe<PostStatusEnum>;
+  /** The title of the object */
+  title?: InputMaybe<Scalars["String"]>;
+}
+
 /** Input for the updateMediaItem mutation */
 export interface UpdateMediaItemInput {
   /** Alternative text to display when mediaItem is not displayed */
@@ -3898,6 +4010,52 @@ export interface UserToContentRevisionUnionConnectionWhereArgs {
   title?: InputMaybe<Scalars["String"]>;
 }
 
+/** Arguments for filtering the UserToHomecolumnConnection connection */
+export interface UserToHomecolumnConnectionWhereArgs {
+  /** The user that's connected as the author of the object. Use the userId for the author object. */
+  author?: InputMaybe<Scalars["Int"]>;
+  /** Find objects connected to author(s) in the array of author's userIds */
+  authorIn?: InputMaybe<Array<InputMaybe<Scalars["ID"]>>>;
+  /** Find objects connected to the author by the author's nicename */
+  authorName?: InputMaybe<Scalars["String"]>;
+  /** Find objects NOT connected to author(s) in the array of author's userIds */
+  authorNotIn?: InputMaybe<Array<InputMaybe<Scalars["ID"]>>>;
+  /** Filter the connection based on dates */
+  dateQuery?: InputMaybe<DateQueryInput>;
+  /** True for objects with passwords; False for objects without passwords; null for all objects with or without passwords */
+  hasPassword?: InputMaybe<Scalars["Boolean"]>;
+  /** Specific ID of the object */
+  id?: InputMaybe<Scalars["Int"]>;
+  /** Array of IDs for the objects to retrieve */
+  in?: InputMaybe<Array<InputMaybe<Scalars["ID"]>>>;
+  /** Get objects with a specific mimeType property */
+  mimeType?: InputMaybe<MimeTypeEnum>;
+  /** Slug / post_name of the object */
+  name?: InputMaybe<Scalars["String"]>;
+  /** Specify objects to retrieve. Use slugs */
+  nameIn?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  /** Specify IDs NOT to retrieve. If this is used in the same query as "in", it will be ignored */
+  notIn?: InputMaybe<Array<InputMaybe<Scalars["ID"]>>>;
+  /** What paramater to use to order the objects by. */
+  orderby?: InputMaybe<Array<InputMaybe<PostObjectsConnectionOrderbyInput>>>;
+  /** Use ID to return only children. Use 0 to return only top-level items */
+  parent?: InputMaybe<Scalars["ID"]>;
+  /** Specify objects whose parent is in an array */
+  parentIn?: InputMaybe<Array<InputMaybe<Scalars["ID"]>>>;
+  /** Specify posts whose parent is not in an array */
+  parentNotIn?: InputMaybe<Array<InputMaybe<Scalars["ID"]>>>;
+  /** Show posts with a specific password. */
+  password?: InputMaybe<Scalars["String"]>;
+  /** Show Posts based on a keyword search */
+  search?: InputMaybe<Scalars["String"]>;
+  /** Retrieve posts where post status is in an array. */
+  stati?: InputMaybe<Array<InputMaybe<PostStatusEnum>>>;
+  /** Show posts with a specific status. */
+  status?: InputMaybe<PostStatusEnum>;
+  /** Title of the object */
+  title?: InputMaybe<Scalars["String"]>;
+}
+
 /** Arguments for filtering the UserToMediaItemConnection connection */
 export interface UserToMediaItemConnectionWhereArgs {
   /** The user that's connected as the author of the object. Use the userId for the author object. */
@@ -4202,6 +4360,7 @@ export const scalarsEnumsHash: import("gqty").ScalarsEnumsHash = {
   ContentTypesOfPostFormatEnum: true,
   ContentTypesOfTagEnum: true,
   Float: true,
+  HomecolumnIdType: true,
   ID: true,
   Int: true,
   MediaItemIdType: true,
@@ -4237,11 +4396,6 @@ export const scalarsEnumsHash: import("gqty").ScalarsEnumsHash = {
   UsersConnectionSearchColumnEnum: true,
 };
 export const generatedSchema = {
-  AcfFieldGroup: {
-    __typename: { __type: "String!" },
-    fieldGroupName: { __type: "String" },
-    $on: { __type: "$AcfFieldGroup!" },
-  },
   Avatar: {
     __typename: { __type: "String!" },
     default: { __type: "String" },
@@ -4818,6 +4972,21 @@ export const generatedSchema = {
     comment: { __type: "Comment" },
     success: { __type: "Boolean" },
   },
+  CreateHomecolumnInput: {
+    authorId: { __type: "ID" },
+    clientMutationId: { __type: "String" },
+    date: { __type: "String" },
+    menuOrder: { __type: "Int" },
+    password: { __type: "String" },
+    slug: { __type: "String" },
+    status: { __type: "PostStatusEnum" },
+    title: { __type: "String" },
+  },
+  CreateHomecolumnPayload: {
+    __typename: { __type: "String!" },
+    clientMutationId: { __type: "String" },
+    homecolumn: { __type: "Homecolumn" },
+  },
   CreateMediaItemInput: {
     altText: { __type: "String" },
     authorId: { __type: "ID" },
@@ -5057,6 +5226,17 @@ export const generatedSchema = {
     clientMutationId: { __type: "String" },
     comment: { __type: "Comment" },
     deletedId: { __type: "ID" },
+  },
+  DeleteHomecolumnInput: {
+    clientMutationId: { __type: "String" },
+    forceDelete: { __type: "Boolean" },
+    id: { __type: "ID!" },
+  },
+  DeleteHomecolumnPayload: {
+    __typename: { __type: "String!" },
+    clientMutationId: { __type: "String" },
+    deletedId: { __type: "ID" },
+    homecolumn: { __type: "Homecolumn" },
   },
   DeleteMediaItemInput: {
     clientMutationId: { __type: "String" },
@@ -5363,6 +5543,58 @@ export const generatedSchema = {
     parentId: { __type: "ID" },
     $on: { __type: "$HierarchicalTermNode!" },
   },
+  Homecolumn: {
+    __typename: { __type: "String!" },
+    author: { __type: "NodeWithAuthorToUserConnectionEdge" },
+    authorDatabaseId: { __type: "Int" },
+    authorId: { __type: "ID" },
+    columnTitle: { __type: "String" },
+    conditionalTags: { __type: "ConditionalTags" },
+    contentType: { __type: "ContentNodeToContentTypeConnectionEdge" },
+    contentTypeName: { __type: "String!" },
+    databaseId: { __type: "Int!" },
+    date: { __type: "String" },
+    dateGmt: { __type: "String" },
+    desiredSlug: { __type: "String" },
+    editingLockedBy: { __type: "ContentNodeToEditLockConnectionEdge" },
+    enclosure: { __type: "String" },
+    enqueuedScripts: {
+      __type: "ContentNodeToEnqueuedScriptConnection",
+      __args: { after: "String", before: "String", first: "Int", last: "Int" },
+    },
+    enqueuedStylesheets: {
+      __type: "ContentNodeToEnqueuedStylesheetConnection",
+      __args: { after: "String", before: "String", first: "Int", last: "Int" },
+    },
+    guid: { __type: "String" },
+    homecolumnId: { __type: "Int!" },
+    icon: { __type: "MediaItem" },
+    id: { __type: "ID!" },
+    isContentNode: { __type: "Boolean!" },
+    isPreview: { __type: "Boolean" },
+    isRestricted: { __type: "Boolean" },
+    isTermNode: { __type: "Boolean!" },
+    lastEditedBy: { __type: "ContentNodeToEditLastConnectionEdge" },
+    link: { __type: "String" },
+    modified: { __type: "String" },
+    modifiedGmt: { __type: "String" },
+    preview: { __type: "HomecolumnToPreviewConnectionEdge" },
+    previewRevisionDatabaseId: { __type: "Int" },
+    previewRevisionId: { __type: "ID" },
+    slug: { __type: "String" },
+    status: { __type: "String" },
+    template: { __type: "ContentTemplate" },
+    templates: { __type: "[String]" },
+    title: {
+      __type: "String",
+      __args: { format: "PostObjectFieldFormatEnum" },
+    },
+    uri: { __type: "String" },
+  },
+  HomecolumnToPreviewConnectionEdge: {
+    __typename: { __type: "String!" },
+    node: { __type: "Homecolumn" },
+  },
   MediaDetails: {
     __typename: { __type: "String!" },
     file: { __type: "String" },
@@ -5439,7 +5671,6 @@ export const generatedSchema = {
     fileSize: { __type: "Int", __args: { size: "MediaItemSizeEnum" } },
     guid: { __type: "String" },
     id: { __type: "ID!" },
-    invoiceTemplate: { __type: "MediaItem_Invoicetemplate" },
     isContentNode: { __type: "Boolean!" },
     isPreview: { __type: "Boolean" },
     isRestricted: { __type: "Boolean" },
@@ -5529,48 +5760,6 @@ export const generatedSchema = {
     search: { __type: "String" },
     status: { __type: "String" },
     userId: { __type: "ID" },
-  },
-  MediaItem_Invoicetemplate: {
-    __typename: { __type: "String!" },
-    applyNow: { __type: "String" },
-    bannerDescription: { __type: "String" },
-    bannerForm: { __type: "String" },
-    bannerImage: { __type: "MediaItem" },
-    bannerLists: { __type: "[MediaItem_Invoicetemplate_bannerLists]" },
-    bannerTitle: { __type: "String" },
-    carouselContent: { __type: "[MediaItem_Invoicetemplate_carouselContent]" },
-    fieldGroupName: { __type: "String" },
-    groupColumnOne: { __type: "[MediaItem_Invoicetemplate_groupColumnOne]" },
-    groupColumnTitle: { __type: "String" },
-    groupColumnTitleTwo: { __type: "String" },
-    groupColumnTwo: { __type: "[MediaItem_Invoicetemplate_groupColumnTwo]" },
-    invoiceMobileBanner: { __type: "MediaItem" },
-  },
-  MediaItem_Invoicetemplate_bannerLists: {
-    __typename: { __type: "String!" },
-    bannerList: { __type: "String" },
-    fieldGroupName: { __type: "String" },
-    listTitle: { __type: "String" },
-  },
-  MediaItem_Invoicetemplate_carouselContent: {
-    __typename: { __type: "String!" },
-    carouselContent: { __type: "String" },
-    carouselImage: { __type: "MediaItem" },
-    fieldGroupName: { __type: "String" },
-  },
-  MediaItem_Invoicetemplate_groupColumnOne: {
-    __typename: { __type: "String!" },
-    fieldGroupName: { __type: "String" },
-    groupOneContent: { __type: "String" },
-    groupOneImage: { __type: "MediaItem" },
-    groupOneTitle: { __type: "String" },
-  },
-  MediaItem_Invoicetemplate_groupColumnTwo: {
-    __typename: { __type: "String!" },
-    fieldGroupName: { __type: "String" },
-    groupContent: { __type: "String" },
-    groupImage: { __type: "MediaItem" },
-    groupTitle: { __type: "String" },
   },
   MediaSize: {
     __typename: { __type: "String!" },
@@ -5808,11 +5997,6 @@ export const generatedSchema = {
   },
   Page: {
     __typename: { __type: "String!" },
-    ACFcontact: { __type: "Page_Acfcontact" },
-    PartnerACF: { __type: "Page_Partneracf" },
-    ThreeColumnStaticPage: { __type: "Page_Threecolumnstaticpage" },
-    aboutUs: { __type: "Page_Aboutus" },
-    accordionData: { __type: "Page_Accordiondata" },
     ancestors: {
       __type: "HierarchicalContentNodeToContentNodeAncestorsConnection",
       __args: {
@@ -5828,7 +6012,6 @@ export const generatedSchema = {
     authorDatabaseId: { __type: "Int" },
     authorId: { __type: "ID" },
     bodyClasses: { __type: "String" },
-    carouselAcf: { __type: "Page_Carouselacf" },
     children: {
       __type: "HierarchicalContentNodeToContentNodeChildrenConnection",
       __args: {
@@ -5873,13 +6056,11 @@ export const generatedSchema = {
       __type: "ContentNodeToEnqueuedStylesheetConnection",
       __args: { after: "String", before: "String", first: "Int", last: "Int" },
     },
-    events: { __type: "Page_Events" },
     featuredImage: { __type: "NodeWithFeaturedImageToMediaItemConnectionEdge" },
     featuredImageDatabaseId: { __type: "Int" },
     featuredImageId: { __type: "ID" },
     guid: { __type: "String" },
     id: { __type: "ID!" },
-    invoiceTemplate: { __type: "Page_Invoicetemplate" },
     isContentNode: { __type: "Boolean!" },
     isFrontPage: { __type: "Boolean!" },
     isPostsPage: { __type: "Boolean!" },
@@ -5890,11 +6071,9 @@ export const generatedSchema = {
     isTermNode: { __type: "Boolean!" },
     lastEditedBy: { __type: "ContentNodeToEditLastConnectionEdge" },
     link: { __type: "String" },
-    mediaCenter: { __type: "Page_Mediacenter" },
     menuOrder: { __type: "Int" },
     modified: { __type: "String" },
     modifiedGmt: { __type: "String" },
-    newProb: { __type: "Page_Newprob" },
     pageId: { __type: "Int!" },
     parent: {
       __type: "HierarchicalContentNodeToParentContentNodeConnectionEdge",
@@ -5904,7 +6083,6 @@ export const generatedSchema = {
     preview: { __type: "PageToPreviewConnectionEdge" },
     previewRevisionDatabaseId: { __type: "Int" },
     previewRevisionId: { __type: "ID" },
-    productsAcf: { __type: "Page_Productsacf" },
     revisionOf: { __type: "NodeWithRevisionsToContentNodeConnectionEdge" },
     revisions: {
       __type: "PageToRevisionConnection",
@@ -5917,9 +6095,7 @@ export const generatedSchema = {
       },
     },
     slug: { __type: "String" },
-    standardPage: { __type: "Page_Standardpage" },
     status: { __type: "String" },
-    successStoriesACF: { __type: "Page_Successstoriesacf" },
     template: { __type: "ContentTemplate" },
     templates: { __type: "[String]" },
     title: {
@@ -6008,282 +6184,6 @@ export const generatedSchema = {
     status: { __type: "PostStatusEnum" },
     title: { __type: "String" },
   },
-  Page_Aboutus: {
-    __typename: { __type: "String!" },
-    aboutDescription: { __type: "String" },
-    bannerImage: { __type: "MediaItem" },
-    bannerTitle: { __type: "String" },
-    fieldGroupName: { __type: "String" },
-    footeContent: { __type: "String" },
-    meetTeam: { __type: "[Page_Aboutus_meetTeam]" },
-    mobileImage: { __type: "MediaItem" },
-    ourHistory: { __type: "[Page_Aboutus_ourHistory]" },
-    ourHistoryRow: { __type: "[Page_Aboutus_ourHistoryRow]" },
-  },
-  Page_Aboutus_meetTeam: {
-    __typename: { __type: "String!" },
-    careerDetails: { __type: "String" },
-    fieldGroupName: { __type: "String" },
-    linkedin: { __type: "String" },
-    name: { __type: "String" },
-    profileImage: { __type: "MediaItem" },
-    role: { __type: "String" },
-  },
-  Page_Aboutus_ourHistory: {
-    __typename: { __type: "String!" },
-    businessFunded: { __type: "String" },
-    companyData: { __type: "String" },
-    companyYear: { __type: "String" },
-    fieldGroupName: { __type: "String" },
-    fundedAmount: { __type: "String" },
-    noOfEmployees: { __type: "String" },
-    svgIcon: { __type: "MediaItem" },
-  },
-  Page_Aboutus_ourHistoryRow: {
-    __typename: { __type: "String!" },
-    businessFunded: { __type: "String" },
-    companyData: { __type: "String" },
-    companyYear: { __type: "String" },
-    fieldGroupName: { __type: "String" },
-    fundedAmount: { __type: "String" },
-    noOfEmployees: { __type: "String" },
-    svgIcon: { __type: "MediaItem" },
-  },
-  Page_Accordiondata: {
-    __typename: { __type: "String!" },
-    accordion: { __type: "[Page_Accordiondata_accordion]" },
-    fieldGroupName: { __type: "String" },
-  },
-  Page_Accordiondata_accordion: {
-    __typename: { __type: "String!" },
-    accordionContent: { __type: "String" },
-    accordionTitle: { __type: "String" },
-    fieldGroupName: { __type: "String" },
-  },
-  Page_Acfcontact: {
-    __typename: { __type: "String!" },
-    fieldGroupName: { __type: "String" },
-    form: { __type: "String" },
-    image: { __type: "MediaItem" },
-    mobileImage: { __type: "MediaItem" },
-  },
-  Page_Carouselacf: {
-    __typename: { __type: "String!" },
-    carouselData: { __type: "[Page_Carouselacf_carouselData]" },
-    fieldGroupName: { __type: "String" },
-  },
-  Page_Carouselacf_carouselData: {
-    __typename: { __type: "String!" },
-    carouselContent: { __type: "String" },
-    carouselImage: { __type: "MediaItem" },
-    fieldGroupName: { __type: "String" },
-  },
-  Page_Events: {
-    __typename: { __type: "String!" },
-    banner: { __type: "Page_Events_Banner" },
-    eventDetails: { __type: "[Page_Events_eventDetails]" },
-    fieldGroupName: { __type: "String" },
-  },
-  Page_Events_Banner: {
-    __typename: { __type: "String!" },
-    bannerButton: { __type: "String" },
-    bannerDescription: { __type: "String" },
-    bannerImage: { __type: "MediaItem" },
-    bannerTitle: { __type: "String" },
-    fieldGroupName: { __type: "String" },
-    mobileBannerImage: { __type: "MediaItem" },
-  },
-  Page_Events_eventDetails: {
-    __typename: { __type: "String!" },
-    eventTitle: { __type: "String" },
-    events: { __type: "String" },
-    fieldGroupName: { __type: "String" },
-  },
-  Page_Invoicetemplate: {
-    __typename: { __type: "String!" },
-    applyNow: { __type: "String" },
-    bannerDescription: { __type: "String" },
-    bannerForm: { __type: "String" },
-    bannerImage: { __type: "MediaItem" },
-    bannerLists: { __type: "[Page_Invoicetemplate_bannerLists]" },
-    bannerTitle: { __type: "String" },
-    carouselContent: { __type: "[Page_Invoicetemplate_carouselContent]" },
-    fieldGroupName: { __type: "String" },
-    groupColumnOne: { __type: "[Page_Invoicetemplate_groupColumnOne]" },
-    groupColumnTitle: { __type: "String" },
-    groupColumnTitleTwo: { __type: "String" },
-    groupColumnTwo: { __type: "[Page_Invoicetemplate_groupColumnTwo]" },
-    invoiceMobileBanner: { __type: "MediaItem" },
-  },
-  Page_Invoicetemplate_bannerLists: {
-    __typename: { __type: "String!" },
-    bannerList: { __type: "String" },
-    fieldGroupName: { __type: "String" },
-    listTitle: { __type: "String" },
-  },
-  Page_Invoicetemplate_carouselContent: {
-    __typename: { __type: "String!" },
-    carouselContent: { __type: "String" },
-    carouselImage: { __type: "MediaItem" },
-    fieldGroupName: { __type: "String" },
-  },
-  Page_Invoicetemplate_groupColumnOne: {
-    __typename: { __type: "String!" },
-    fieldGroupName: { __type: "String" },
-    groupOneContent: { __type: "String" },
-    groupOneImage: { __type: "MediaItem" },
-    groupOneTitle: { __type: "String" },
-  },
-  Page_Invoicetemplate_groupColumnTwo: {
-    __typename: { __type: "String!" },
-    fieldGroupName: { __type: "String" },
-    groupContent: { __type: "String" },
-    groupImage: { __type: "MediaItem" },
-    groupTitle: { __type: "String" },
-  },
-  Page_Mediacenter: {
-    __typename: { __type: "String!" },
-    bannerDescription: { __type: "String" },
-    bannerImage: { __type: "MediaItem" },
-    bannerTitle: { __type: "String" },
-    button: { __type: "String" },
-    fieldGroupName: { __type: "String" },
-    media: { __type: "[Page_Mediacenter_media]" },
-    mobileBanner: { __type: "MediaItem" },
-    twoColumn: { __type: "[Page_Mediacenter_twoColumn]" },
-  },
-  Page_Mediacenter_media: {
-    __typename: { __type: "String!" },
-    fieldGroupName: { __type: "String" },
-    mediaMouseOverText: { __type: "String" },
-    mediaTitle: { __type: "MediaItem" },
-  },
-  Page_Mediacenter_twoColumn: {
-    __typename: { __type: "String!" },
-    callUs: { __type: "MediaItem" },
-    columnContent: { __type: "String" },
-    columnTitle: { __type: "String" },
-    fieldGroupName: { __type: "String" },
-  },
-  Page_Newprob: {
-    __typename: { __type: "String!" },
-    desktop: { __type: "MediaItem" },
-    fieldGroupName: { __type: "String" },
-  },
-  Page_Partneracf: {
-    __typename: { __type: "String!" },
-    bannerButton: { __type: "String" },
-    bannerDescription: { __type: "String" },
-    bannerImage: { __type: "MediaItem" },
-    bannerTitle: { __type: "String" },
-    fieldGroupName: { __type: "String" },
-    howItWorks: { __type: "[Page_Partneracf_howItWorks]" },
-    joinToday: { __type: "String" },
-    mobileBanner: { __type: "MediaItem" },
-    rightPartnershipForYou: { __type: "String" },
-    threeColumn: { __type: "[Page_Partneracf_threeColumn]" },
-  },
-  Page_Partneracf_howItWorks: {
-    __typename: { __type: "String!" },
-    fieldGroupName: { __type: "String" },
-    svgIcon: { __type: "MediaItem" },
-    title: { __type: "String" },
-  },
-  Page_Partneracf_threeColumn: {
-    __typename: { __type: "String!" },
-    cardContent: { __type: "String" },
-    cardTitle: { __type: "String" },
-    fieldGroupName: { __type: "String" },
-    svgIcon: { __type: "MediaItem" },
-  },
-  Page_Productsacf: {
-    __typename: { __type: "String!" },
-    bannerForm: { __type: "String" },
-    bannerListItems: { __type: "[Page_Productsacf_bannerListItems]" },
-    fieldGroupName: { __type: "String" },
-    getStartedToday: { __type: "String" },
-    mobileBannerImage: { __type: "MediaItem" },
-    ourGoal: { __type: "String" },
-    pageBanner: { __type: "MediaItem" },
-    pageBannerDescription: { __type: "String" },
-    pageBannerTitle: { __type: "String" },
-    productsCards: { __type: "[Page_Productsacf_productsCards]" },
-  },
-  Page_Productsacf_bannerListItems: {
-    __typename: { __type: "String!" },
-    fieldGroupName: { __type: "String" },
-    listsItems: { __type: "String" },
-    title: { __type: "String" },
-  },
-  Page_Productsacf_productsCards: {
-    __typename: { __type: "String!" },
-    cardButton: { __type: "String" },
-    cardContent: { __type: "String" },
-    cardSlug: { __type: "String" },
-    cardTitle: { __type: "String" },
-    fieldGroupName: { __type: "String" },
-    svgIcon: { __type: "MediaItem" },
-  },
-  Page_Standardpage: {
-    __typename: { __type: "String!" },
-    featuredImageButton: { __type: "String" },
-    featuredImageTitle: { __type: "String" },
-    fieldGroupName: { __type: "String" },
-  },
-  Page_Successstoriesacf: {
-    __typename: { __type: "String!" },
-    carouselSlider: { __type: "[Page_Successstoriesacf_carouselSlider]" },
-    fieldGroupName: { __type: "String" },
-    footerContent: { __type: "String" },
-    pageLargeSlider: { __type: "[Page_Successstoriesacf_pageLargeSlider]" },
-    suggestedResources: {
-      __type: "[Page_Successstoriesacf_suggestedResources]",
-    },
-  },
-  Page_Successstoriesacf_carouselSlider: {
-    __typename: { __type: "String!" },
-    carouselContent: { __type: "String" },
-    carouselImage: { __type: "MediaItem" },
-    fieldGroupName: { __type: "String" },
-  },
-  Page_Successstoriesacf_pageLargeSlider: {
-    __typename: { __type: "String!" },
-    fieldGroupName: { __type: "String" },
-    sliderContent: { __type: "String" },
-    sliderImage: { __type: "MediaItem" },
-  },
-  Page_Successstoriesacf_suggestedResources: {
-    __typename: { __type: "String!" },
-    fieldGroupName: { __type: "String" },
-    link: { __type: "String" },
-    resourceContent: { __type: "String" },
-    svgIcon: { __type: "MediaItem" },
-  },
-  Page_Threecolumnstaticpage: {
-    __typename: { __type: "String!" },
-    banner: { __type: "Page_Threecolumnstaticpage_Banner" },
-    cards: { __type: "[Page_Threecolumnstaticpage_cards]" },
-    fieldGroupName: { __type: "String" },
-    financeSolution: { __type: "String" },
-  },
-  Page_Threecolumnstaticpage_Banner: {
-    __typename: { __type: "String!" },
-    bannerButton: { __type: "String" },
-    bannerDescription: { __type: "String" },
-    bannerImage: { __type: "MediaItem" },
-    bannerTitle: { __type: "String" },
-    fieldGroupName: { __type: "String" },
-    mobileBannerImage: { __type: "MediaItem" },
-  },
-  Page_Threecolumnstaticpage_cards: {
-    __typename: { __type: "String!" },
-    buttonLink: { __type: "String" },
-    cardButton: { __type: "String" },
-    cardContent: { __type: "String" },
-    cardTitle: { __type: "String" },
-    fieldGroupName: { __type: "String" },
-    svgIcon: { __type: "MediaItem" },
-  },
   Plugin: {
     __typename: { __type: "String!" },
     author: { __type: "String" },
@@ -6301,7 +6201,6 @@ export const generatedSchema = {
     author: { __type: "NodeWithAuthorToUserConnectionEdge" },
     authorDatabaseId: { __type: "Int" },
     authorId: { __type: "ID" },
-    blogsAcf: { __type: "Post_Blogsacf" },
     bodyClasses: { __type: "String" },
     categories: {
       __type: "PostToCategoryConnection",
@@ -6356,7 +6255,6 @@ export const generatedSchema = {
     featuredImageId: { __type: "ID" },
     guid: { __type: "String" },
     id: { __type: "ID!" },
-    invoiceTemplate: { __type: "Post_Invoicetemplate" },
     isContentNode: { __type: "Boolean!" },
     isPreview: { __type: "Boolean" },
     isRestricted: { __type: "Boolean" },
@@ -6878,55 +6776,6 @@ export const generatedSchema = {
     viewItem: { __type: "String" },
     viewItems: { __type: "String" },
   },
-  Post_Blogsacf: {
-    __typename: { __type: "String!" },
-    blogContent: { __type: "String" },
-    blogImage: { __type: "MediaItem" },
-    blogTitle: { __type: "String" },
-    fieldGroupName: { __type: "String" },
-  },
-  Post_Invoicetemplate: {
-    __typename: { __type: "String!" },
-    applyNow: { __type: "String" },
-    bannerDescription: { __type: "String" },
-    bannerForm: { __type: "String" },
-    bannerImage: { __type: "MediaItem" },
-    bannerLists: { __type: "[Post_Invoicetemplate_bannerLists]" },
-    bannerTitle: { __type: "String" },
-    carouselContent: { __type: "[Post_Invoicetemplate_carouselContent]" },
-    fieldGroupName: { __type: "String" },
-    groupColumnOne: { __type: "[Post_Invoicetemplate_groupColumnOne]" },
-    groupColumnTitle: { __type: "String" },
-    groupColumnTitleTwo: { __type: "String" },
-    groupColumnTwo: { __type: "[Post_Invoicetemplate_groupColumnTwo]" },
-    invoiceMobileBanner: { __type: "MediaItem" },
-  },
-  Post_Invoicetemplate_bannerLists: {
-    __typename: { __type: "String!" },
-    bannerList: { __type: "String" },
-    fieldGroupName: { __type: "String" },
-    listTitle: { __type: "String" },
-  },
-  Post_Invoicetemplate_carouselContent: {
-    __typename: { __type: "String!" },
-    carouselContent: { __type: "String" },
-    carouselImage: { __type: "MediaItem" },
-    fieldGroupName: { __type: "String" },
-  },
-  Post_Invoicetemplate_groupColumnOne: {
-    __typename: { __type: "String!" },
-    fieldGroupName: { __type: "String" },
-    groupOneContent: { __type: "String" },
-    groupOneImage: { __type: "MediaItem" },
-    groupOneTitle: { __type: "String" },
-  },
-  Post_Invoicetemplate_groupColumnTwo: {
-    __typename: { __type: "String!" },
-    fieldGroupName: { __type: "String" },
-    groupContent: { __type: "String" },
-    groupImage: { __type: "MediaItem" },
-    groupTitle: { __type: "String" },
-  },
   PressCoverage: {
     __typename: { __type: "String!" },
     conditionalTags: { __type: "ConditionalTags" },
@@ -6955,7 +6804,6 @@ export const generatedSchema = {
     featuredImageId: { __type: "ID" },
     guid: { __type: "String" },
     id: { __type: "ID!" },
-    invoiceTemplate: { __type: "PressCoverage_Invoicetemplate" },
     isContentNode: { __type: "Boolean!" },
     isPreview: { __type: "Boolean" },
     isRestricted: { __type: "Boolean" },
@@ -7026,54 +6874,6 @@ export const generatedSchema = {
     termTaxonomId: { __type: "[ID]" },
     updateTermMetaCache: { __type: "Boolean" },
   },
-  PressCoverage_Invoicetemplate: {
-    __typename: { __type: "String!" },
-    applyNow: { __type: "String" },
-    bannerDescription: { __type: "String" },
-    bannerForm: { __type: "String" },
-    bannerImage: { __type: "MediaItem" },
-    bannerLists: { __type: "[PressCoverage_Invoicetemplate_bannerLists]" },
-    bannerTitle: { __type: "String" },
-    carouselContent: {
-      __type: "[PressCoverage_Invoicetemplate_carouselContent]",
-    },
-    fieldGroupName: { __type: "String" },
-    groupColumnOne: {
-      __type: "[PressCoverage_Invoicetemplate_groupColumnOne]",
-    },
-    groupColumnTitle: { __type: "String" },
-    groupColumnTitleTwo: { __type: "String" },
-    groupColumnTwo: {
-      __type: "[PressCoverage_Invoicetemplate_groupColumnTwo]",
-    },
-    invoiceMobileBanner: { __type: "MediaItem" },
-  },
-  PressCoverage_Invoicetemplate_bannerLists: {
-    __typename: { __type: "String!" },
-    bannerList: { __type: "String" },
-    fieldGroupName: { __type: "String" },
-    listTitle: { __type: "String" },
-  },
-  PressCoverage_Invoicetemplate_carouselContent: {
-    __typename: { __type: "String!" },
-    carouselContent: { __type: "String" },
-    carouselImage: { __type: "MediaItem" },
-    fieldGroupName: { __type: "String" },
-  },
-  PressCoverage_Invoicetemplate_groupColumnOne: {
-    __typename: { __type: "String!" },
-    fieldGroupName: { __type: "String" },
-    groupOneContent: { __type: "String" },
-    groupOneImage: { __type: "MediaItem" },
-    groupOneTitle: { __type: "String" },
-  },
-  PressCoverage_Invoicetemplate_groupColumnTwo: {
-    __typename: { __type: "String!" },
-    fieldGroupName: { __type: "String" },
-    groupContent: { __type: "String" },
-    groupImage: { __type: "MediaItem" },
-    groupTitle: { __type: "String" },
-  },
   PressRelease: {
     __typename: { __type: "String!" },
     conditionalTags: { __type: "ConditionalTags" },
@@ -7102,7 +6902,6 @@ export const generatedSchema = {
     featuredImageId: { __type: "ID" },
     guid: { __type: "String" },
     id: { __type: "ID!" },
-    invoiceTemplate: { __type: "PressRelease_Invoicetemplate" },
     isContentNode: { __type: "Boolean!" },
     isPreview: { __type: "Boolean" },
     isRestricted: { __type: "Boolean" },
@@ -7173,50 +6972,6 @@ export const generatedSchema = {
     termTaxonomId: { __type: "[ID]" },
     updateTermMetaCache: { __type: "Boolean" },
   },
-  PressRelease_Invoicetemplate: {
-    __typename: { __type: "String!" },
-    applyNow: { __type: "String" },
-    bannerDescription: { __type: "String" },
-    bannerForm: { __type: "String" },
-    bannerImage: { __type: "MediaItem" },
-    bannerLists: { __type: "[PressRelease_Invoicetemplate_bannerLists]" },
-    bannerTitle: { __type: "String" },
-    carouselContent: {
-      __type: "[PressRelease_Invoicetemplate_carouselContent]",
-    },
-    fieldGroupName: { __type: "String" },
-    groupColumnOne: { __type: "[PressRelease_Invoicetemplate_groupColumnOne]" },
-    groupColumnTitle: { __type: "String" },
-    groupColumnTitleTwo: { __type: "String" },
-    groupColumnTwo: { __type: "[PressRelease_Invoicetemplate_groupColumnTwo]" },
-    invoiceMobileBanner: { __type: "MediaItem" },
-  },
-  PressRelease_Invoicetemplate_bannerLists: {
-    __typename: { __type: "String!" },
-    bannerList: { __type: "String" },
-    fieldGroupName: { __type: "String" },
-    listTitle: { __type: "String" },
-  },
-  PressRelease_Invoicetemplate_carouselContent: {
-    __typename: { __type: "String!" },
-    carouselContent: { __type: "String" },
-    carouselImage: { __type: "MediaItem" },
-    fieldGroupName: { __type: "String" },
-  },
-  PressRelease_Invoicetemplate_groupColumnOne: {
-    __typename: { __type: "String!" },
-    fieldGroupName: { __type: "String" },
-    groupOneContent: { __type: "String" },
-    groupOneImage: { __type: "MediaItem" },
-    groupOneTitle: { __type: "String" },
-  },
-  PressRelease_Invoicetemplate_groupColumnTwo: {
-    __typename: { __type: "String!" },
-    fieldGroupName: { __type: "String" },
-    groupContent: { __type: "String" },
-    groupImage: { __type: "MediaItem" },
-    groupTitle: { __type: "String" },
-  },
   Productos: {
     __typename: { __type: "String!" },
     author: { __type: "NodeWithAuthorToUserConnectionEdge" },
@@ -7241,7 +6996,6 @@ export const generatedSchema = {
     },
     guid: { __type: "String" },
     id: { __type: "ID!" },
-    invoiceTemplate: { __type: "Productos_Invoicetemplate" },
     isContentNode: { __type: "Boolean!" },
     isPreview: { __type: "Boolean" },
     isRestricted: { __type: "Boolean" },
@@ -7267,48 +7021,6 @@ export const generatedSchema = {
   ProductosToPreviewConnectionEdge: {
     __typename: { __type: "String!" },
     node: { __type: "Productos" },
-  },
-  Productos_Invoicetemplate: {
-    __typename: { __type: "String!" },
-    applyNow: { __type: "String" },
-    bannerDescription: { __type: "String" },
-    bannerForm: { __type: "String" },
-    bannerImage: { __type: "MediaItem" },
-    bannerLists: { __type: "[Productos_Invoicetemplate_bannerLists]" },
-    bannerTitle: { __type: "String" },
-    carouselContent: { __type: "[Productos_Invoicetemplate_carouselContent]" },
-    fieldGroupName: { __type: "String" },
-    groupColumnOne: { __type: "[Productos_Invoicetemplate_groupColumnOne]" },
-    groupColumnTitle: { __type: "String" },
-    groupColumnTitleTwo: { __type: "String" },
-    groupColumnTwo: { __type: "[Productos_Invoicetemplate_groupColumnTwo]" },
-    invoiceMobileBanner: { __type: "MediaItem" },
-  },
-  Productos_Invoicetemplate_bannerLists: {
-    __typename: { __type: "String!" },
-    bannerList: { __type: "String" },
-    fieldGroupName: { __type: "String" },
-    listTitle: { __type: "String" },
-  },
-  Productos_Invoicetemplate_carouselContent: {
-    __typename: { __type: "String!" },
-    carouselContent: { __type: "String" },
-    carouselImage: { __type: "MediaItem" },
-    fieldGroupName: { __type: "String" },
-  },
-  Productos_Invoicetemplate_groupColumnOne: {
-    __typename: { __type: "String!" },
-    fieldGroupName: { __type: "String" },
-    groupOneContent: { __type: "String" },
-    groupOneImage: { __type: "MediaItem" },
-    groupOneTitle: { __type: "String" },
-  },
-  Productos_Invoicetemplate_groupColumnTwo: {
-    __typename: { __type: "String!" },
-    fieldGroupName: { __type: "String" },
-    groupContent: { __type: "String" },
-    groupImage: { __type: "MediaItem" },
-    groupTitle: { __type: "String" },
   },
   ProductsService: {
     __typename: { __type: "String!" },
@@ -7355,14 +7067,11 @@ export const generatedSchema = {
       __type: "ContentNodeToEnqueuedStylesheetConnection",
       __args: { after: "String", before: "String", first: "Int", last: "Int" },
     },
-    faqAcf: { __type: "ProductsService_Faqacf" },
     featuredImage: { __type: "NodeWithFeaturedImageToMediaItemConnectionEdge" },
     featuredImageDatabaseId: { __type: "Int" },
     featuredImageId: { __type: "ID" },
     guid: { __type: "String" },
     id: { __type: "ID!" },
-    individualProducts: { __type: "ProductsService_Individualproducts" },
-    invoiceTemplate: { __type: "ProductsService_Invoicetemplate" },
     isContentNode: { __type: "Boolean!" },
     isPreview: { __type: "Boolean" },
     isRestricted: { __type: "Boolean" },
@@ -7392,7 +7101,6 @@ export const generatedSchema = {
     previewRevisionDatabaseId: { __type: "Int" },
     previewRevisionId: { __type: "ID" },
     productsServiceId: { __type: "Int!" },
-    productsSubMenu: { __type: "ProductsService_Productssubmenu" },
     revisionOf: { __type: "NodeWithRevisionsToContentNodeConnectionEdge" },
     revisions: {
       __type: "ProductsServiceToRevisionConnection",
@@ -7534,115 +7242,6 @@ export const generatedSchema = {
     taxonomies: { __type: "[TaxonomyEnum]" },
     termTaxonomId: { __type: "[ID]" },
     updateTermMetaCache: { __type: "Boolean" },
-  },
-  ProductsService_Faqacf: {
-    __typename: { __type: "String!" },
-    faqs: { __type: "[ProductsService_Faqacf_faqs]" },
-    fieldGroupName: { __type: "String" },
-  },
-  ProductsService_Faqacf_faqs: {
-    __typename: { __type: "String!" },
-    answer: { __type: "String" },
-    fieldGroupName: { __type: "String" },
-    question: { __type: "String" },
-  },
-  ProductsService_Individualproducts: {
-    __typename: { __type: "String!" },
-    banner: { __type: "MediaItem" },
-    bannerData: { __type: "[ProductsService_Individualproducts_bannerData]" },
-    bannerDescription: { __type: "String" },
-    blogHeading: { __type: "String" },
-    blogs: { __type: "[ProductsService_Individualproducts_blogs]" },
-    businessLoanDescription: { __type: "String" },
-    fieldGroupName: { __type: "String" },
-    groupColumn: { __type: "[ProductsService_Individualproducts_groupColumn]" },
-    howToApply: { __type: "String" },
-    mobileBannerImage: { __type: "MediaItem" },
-    productsContent: { __type: "String" },
-    requirements: { __type: "String" },
-    title: { __type: "String" },
-    whoShould: { __type: "String" },
-  },
-  ProductsService_Individualproducts_bannerData: {
-    __typename: { __type: "String!" },
-    fieldGroupName: { __type: "String" },
-    listItems: { __type: "String" },
-    listTitle: { __type: "String" },
-  },
-  ProductsService_Individualproducts_blogs: {
-    __typename: { __type: "String!" },
-    blogImage: { __type: "MediaItem" },
-    blogLink: { __type: "String" },
-    description: { __type: "String" },
-    fieldGroupName: { __type: "String" },
-    title: { __type: "String" },
-  },
-  ProductsService_Individualproducts_groupColumn: {
-    __typename: { __type: "String!" },
-    fieldGroupName: { __type: "String" },
-    groupContent: { __type: "String" },
-    groupNumber: { __type: "String" },
-    groupTitle: { __type: "String" },
-  },
-  ProductsService_Invoicetemplate: {
-    __typename: { __type: "String!" },
-    applyNow: { __type: "String" },
-    bannerDescription: { __type: "String" },
-    bannerForm: { __type: "String" },
-    bannerImage: { __type: "MediaItem" },
-    bannerLists: { __type: "[ProductsService_Invoicetemplate_bannerLists]" },
-    bannerTitle: { __type: "String" },
-    carouselContent: {
-      __type: "[ProductsService_Invoicetemplate_carouselContent]",
-    },
-    fieldGroupName: { __type: "String" },
-    groupColumnOne: {
-      __type: "[ProductsService_Invoicetemplate_groupColumnOne]",
-    },
-    groupColumnTitle: { __type: "String" },
-    groupColumnTitleTwo: { __type: "String" },
-    groupColumnTwo: {
-      __type: "[ProductsService_Invoicetemplate_groupColumnTwo]",
-    },
-    invoiceMobileBanner: { __type: "MediaItem" },
-  },
-  ProductsService_Invoicetemplate_bannerLists: {
-    __typename: { __type: "String!" },
-    bannerList: { __type: "String" },
-    fieldGroupName: { __type: "String" },
-    listTitle: { __type: "String" },
-  },
-  ProductsService_Invoicetemplate_carouselContent: {
-    __typename: { __type: "String!" },
-    carouselContent: { __type: "String" },
-    carouselImage: { __type: "MediaItem" },
-    fieldGroupName: { __type: "String" },
-  },
-  ProductsService_Invoicetemplate_groupColumnOne: {
-    __typename: { __type: "String!" },
-    fieldGroupName: { __type: "String" },
-    groupOneContent: { __type: "String" },
-    groupOneImage: { __type: "MediaItem" },
-    groupOneTitle: { __type: "String" },
-  },
-  ProductsService_Invoicetemplate_groupColumnTwo: {
-    __typename: { __type: "String!" },
-    fieldGroupName: { __type: "String" },
-    groupContent: { __type: "String" },
-    groupImage: { __type: "MediaItem" },
-    groupTitle: { __type: "String" },
-  },
-  ProductsService_Productssubmenu: {
-    __typename: { __type: "String!" },
-    fieldGroupName: { __type: "String" },
-    menuName: { __type: "[ProductsService_Productssubmenu_menuName]" },
-  },
-  ProductsService_Productssubmenu_menuName: {
-    __typename: { __type: "String!" },
-    fieldGroupName: { __type: "String" },
-    menuImage: { __type: "MediaItem" },
-    menuLabel: { __type: "String" },
-    menuUri: { __type: "String" },
   },
   ReadingSettings: {
     __typename: { __type: "String!" },
@@ -7862,6 +7461,40 @@ export const generatedSchema = {
     __typename: { __type: "String!" },
     cursor: { __type: "String" },
     node: { __type: "EnqueuedStylesheet" },
+  },
+  RootQueryToHomecolumnConnection: {
+    __typename: { __type: "String!" },
+    edges: { __type: "[RootQueryToHomecolumnConnectionEdge]" },
+    nodes: { __type: "[Homecolumn]" },
+    pageInfo: { __type: "WPPageInfo" },
+  },
+  RootQueryToHomecolumnConnectionEdge: {
+    __typename: { __type: "String!" },
+    cursor: { __type: "String" },
+    node: { __type: "Homecolumn" },
+  },
+  RootQueryToHomecolumnConnectionWhereArgs: {
+    author: { __type: "Int" },
+    authorIn: { __type: "[ID]" },
+    authorName: { __type: "String" },
+    authorNotIn: { __type: "[ID]" },
+    dateQuery: { __type: "DateQueryInput" },
+    hasPassword: { __type: "Boolean" },
+    id: { __type: "Int" },
+    in: { __type: "[ID]" },
+    mimeType: { __type: "MimeTypeEnum" },
+    name: { __type: "String" },
+    nameIn: { __type: "[String]" },
+    notIn: { __type: "[ID]" },
+    orderby: { __type: "[PostObjectsConnectionOrderbyInput]" },
+    parent: { __type: "ID" },
+    parentIn: { __type: "[ID]" },
+    parentNotIn: { __type: "[ID]" },
+    password: { __type: "String" },
+    search: { __type: "String" },
+    stati: { __type: "[PostStatusEnum]" },
+    status: { __type: "PostStatusEnum" },
+    title: { __type: "String" },
   },
   RootQueryToMediaItemConnection: {
     __typename: { __type: "String!" },
@@ -8560,7 +8193,6 @@ export const generatedSchema = {
     fullName: { __type: "String" },
     guid: { __type: "String" },
     id: { __type: "ID!" },
-    invoiceTemplate: { __type: "TeamMember_Invoicetemplate" },
     isContentNode: { __type: "Boolean!" },
     isPreview: { __type: "Boolean" },
     isRestricted: { __type: "Boolean" },
@@ -8587,48 +8219,6 @@ export const generatedSchema = {
   TeamMemberToPreviewConnectionEdge: {
     __typename: { __type: "String!" },
     node: { __type: "TeamMember" },
-  },
-  TeamMember_Invoicetemplate: {
-    __typename: { __type: "String!" },
-    applyNow: { __type: "String" },
-    bannerDescription: { __type: "String" },
-    bannerForm: { __type: "String" },
-    bannerImage: { __type: "MediaItem" },
-    bannerLists: { __type: "[TeamMember_Invoicetemplate_bannerLists]" },
-    bannerTitle: { __type: "String" },
-    carouselContent: { __type: "[TeamMember_Invoicetemplate_carouselContent]" },
-    fieldGroupName: { __type: "String" },
-    groupColumnOne: { __type: "[TeamMember_Invoicetemplate_groupColumnOne]" },
-    groupColumnTitle: { __type: "String" },
-    groupColumnTitleTwo: { __type: "String" },
-    groupColumnTwo: { __type: "[TeamMember_Invoicetemplate_groupColumnTwo]" },
-    invoiceMobileBanner: { __type: "MediaItem" },
-  },
-  TeamMember_Invoicetemplate_bannerLists: {
-    __typename: { __type: "String!" },
-    bannerList: { __type: "String" },
-    fieldGroupName: { __type: "String" },
-    listTitle: { __type: "String" },
-  },
-  TeamMember_Invoicetemplate_carouselContent: {
-    __typename: { __type: "String!" },
-    carouselContent: { __type: "String" },
-    carouselImage: { __type: "MediaItem" },
-    fieldGroupName: { __type: "String" },
-  },
-  TeamMember_Invoicetemplate_groupColumnOne: {
-    __typename: { __type: "String!" },
-    fieldGroupName: { __type: "String" },
-    groupOneContent: { __type: "String" },
-    groupOneImage: { __type: "MediaItem" },
-    groupOneTitle: { __type: "String" },
-  },
-  TeamMember_Invoicetemplate_groupColumnTwo: {
-    __typename: { __type: "String!" },
-    fieldGroupName: { __type: "String" },
-    groupContent: { __type: "String" },
-    groupImage: { __type: "MediaItem" },
-    groupTitle: { __type: "String" },
   },
   TermNode: {
     __typename: { __type: "String!" },
@@ -8736,6 +8326,22 @@ export const generatedSchema = {
     clientMutationId: { __type: "String" },
     comment: { __type: "Comment" },
     success: { __type: "Boolean" },
+  },
+  UpdateHomecolumnInput: {
+    authorId: { __type: "ID" },
+    clientMutationId: { __type: "String" },
+    date: { __type: "String" },
+    id: { __type: "ID!" },
+    menuOrder: { __type: "Int" },
+    password: { __type: "String" },
+    slug: { __type: "String" },
+    status: { __type: "PostStatusEnum" },
+    title: { __type: "String" },
+  },
+  UpdateHomecolumnPayload: {
+    __typename: { __type: "String!" },
+    clientMutationId: { __type: "String" },
+    homecolumn: { __type: "Homecolumn" },
   },
   UpdateMediaItemInput: {
     altText: { __type: "String" },
@@ -9000,6 +8606,16 @@ export const generatedSchema = {
     },
     extraCapabilities: { __type: "[String]" },
     firstName: { __type: "String" },
+    homecolumns: {
+      __type: "UserToHomecolumnConnection",
+      __args: {
+        after: "String",
+        before: "String",
+        first: "Int",
+        last: "Int",
+        where: "UserToHomecolumnConnectionWhereArgs",
+      },
+    },
     id: { __type: "ID!" },
     isContentNode: { __type: "Boolean!" },
     isRestricted: { __type: "Boolean" },
@@ -9183,6 +8799,40 @@ export const generatedSchema = {
     __typename: { __type: "String!" },
     cursor: { __type: "String" },
     node: { __type: "EnqueuedStylesheet" },
+  },
+  UserToHomecolumnConnection: {
+    __typename: { __type: "String!" },
+    edges: { __type: "[UserToHomecolumnConnectionEdge]" },
+    nodes: { __type: "[Homecolumn]" },
+    pageInfo: { __type: "WPPageInfo" },
+  },
+  UserToHomecolumnConnectionEdge: {
+    __typename: { __type: "String!" },
+    cursor: { __type: "String" },
+    node: { __type: "Homecolumn" },
+  },
+  UserToHomecolumnConnectionWhereArgs: {
+    author: { __type: "Int" },
+    authorIn: { __type: "[ID]" },
+    authorName: { __type: "String" },
+    authorNotIn: { __type: "[ID]" },
+    dateQuery: { __type: "DateQueryInput" },
+    hasPassword: { __type: "Boolean" },
+    id: { __type: "Int" },
+    in: { __type: "[ID]" },
+    mimeType: { __type: "MimeTypeEnum" },
+    name: { __type: "String" },
+    nameIn: { __type: "[String]" },
+    notIn: { __type: "[ID]" },
+    orderby: { __type: "[PostObjectsConnectionOrderbyInput]" },
+    parent: { __type: "ID" },
+    parentIn: { __type: "[ID]" },
+    parentNotIn: { __type: "[ID]" },
+    password: { __type: "String" },
+    search: { __type: "String" },
+    stati: { __type: "[PostStatusEnum]" },
+    status: { __type: "PostStatusEnum" },
+    title: { __type: "String" },
   },
   UserToMediaItemConnection: {
     __typename: { __type: "String!" },
@@ -9402,6 +9052,10 @@ export const generatedSchema = {
       __type: "CreateCommentPayload",
       __args: { input: "CreateCommentInput!" },
     },
+    createHomecolumn: {
+      __type: "CreateHomecolumnPayload",
+      __args: { input: "CreateHomecolumnInput!" },
+    },
     createMediaItem: {
       __type: "CreateMediaItemPayload",
       __args: { input: "CreateMediaItemInput!" },
@@ -9453,6 +9107,10 @@ export const generatedSchema = {
     deleteComment: {
       __type: "DeleteCommentPayload",
       __args: { input: "DeleteCommentInput!" },
+    },
+    deleteHomecolumn: {
+      __type: "DeleteHomecolumnPayload",
+      __args: { input: "DeleteHomecolumnInput!" },
     },
     deleteMediaItem: {
       __type: "DeleteMediaItemPayload",
@@ -9526,6 +9184,10 @@ export const generatedSchema = {
     updateComment: {
       __type: "UpdateCommentPayload",
       __args: { input: "UpdateCommentInput!" },
+    },
+    updateHomecolumn: {
+      __type: "UpdateHomecolumnPayload",
+      __args: { input: "UpdateHomecolumnInput!" },
     },
     updateMediaItem: {
       __type: "UpdateMediaItemPayload",
@@ -9635,6 +9297,24 @@ export const generatedSchema = {
     generalSettings: { __type: "GeneralSettings" },
     getFooter: { __type: "HCMSFooter" },
     getHeader: { __type: "HCMSHeader" },
+    homecolumn: {
+      __type: "Homecolumn",
+      __args: { asPreview: "Boolean", id: "ID!", idType: "HomecolumnIdType" },
+    },
+    homecolumnBy: {
+      __type: "Homecolumn",
+      __args: { homecolumnId: "Int", id: "ID", slug: "String", uri: "String" },
+    },
+    homecolumns: {
+      __type: "RootQueryToHomecolumnConnection",
+      __args: {
+        after: "String",
+        before: "String",
+        first: "Int",
+        last: "Int",
+        where: "RootQueryToHomecolumnConnectionWhereArgs",
+      },
+    },
     mediaItem: {
       __type: "MediaItem",
       __args: { asPreview: "Boolean", id: "ID!", idType: "MediaItemIdType" },
@@ -9937,6 +9617,7 @@ export const generatedSchema = {
     DatabaseIdentifier: [
       "Category",
       "Comment",
+      "Homecolumn",
       "MediaItem",
       "Menu",
       "MenuItem",
@@ -9969,6 +9650,7 @@ export const generatedSchema = {
       "ContentType",
       "EnqueuedScript",
       "EnqueuedStylesheet",
+      "Homecolumn",
       "MediaItem",
       "Menu",
       "MenuItem",
@@ -9991,6 +9673,7 @@ export const generatedSchema = {
     UniformResourceIdentifiable: [
       "Category",
       "ContentType",
+      "Homecolumn",
       "MediaItem",
       "Page",
       "Post",
@@ -10008,6 +9691,7 @@ export const generatedSchema = {
     ContentTemplate: ["DefaultTemplate"],
     EnqueuedAsset: ["EnqueuedScript", "EnqueuedStylesheet"],
     ContentNode: [
+      "Homecolumn",
       "MediaItem",
       "Page",
       "Post",
@@ -10017,10 +9701,16 @@ export const generatedSchema = {
       "ProductsService",
       "TeamMember",
     ],
-    HierarchicalContentNode: ["MediaItem", "Page", "ProductsService"],
-    NodeWithAuthor: ["MediaItem", "Page", "Post", "Productos", "TeamMember"],
-    NodeWithComments: ["MediaItem", "Page", "Post"],
+    NodeWithAuthor: [
+      "Homecolumn",
+      "MediaItem",
+      "Page",
+      "Post",
+      "Productos",
+      "TeamMember",
+    ],
     NodeWithTemplate: [
+      "Homecolumn",
       "MediaItem",
       "Page",
       "Post",
@@ -10031,6 +9721,7 @@ export const generatedSchema = {
       "TeamMember",
     ],
     NodeWithTitle: [
+      "Homecolumn",
       "MediaItem",
       "Page",
       "Post",
@@ -10040,87 +9731,8 @@ export const generatedSchema = {
       "ProductsService",
       "TeamMember",
     ],
-    AcfFieldGroup: [
-      "MediaItem_Invoicetemplate",
-      "MediaItem_Invoicetemplate_bannerLists",
-      "MediaItem_Invoicetemplate_carouselContent",
-      "MediaItem_Invoicetemplate_groupColumnOne",
-      "MediaItem_Invoicetemplate_groupColumnTwo",
-      "Page_Aboutus",
-      "Page_Aboutus_meetTeam",
-      "Page_Aboutus_ourHistory",
-      "Page_Aboutus_ourHistoryRow",
-      "Page_Accordiondata",
-      "Page_Accordiondata_accordion",
-      "Page_Acfcontact",
-      "Page_Carouselacf",
-      "Page_Carouselacf_carouselData",
-      "Page_Events",
-      "Page_Events_Banner",
-      "Page_Events_eventDetails",
-      "Page_Invoicetemplate",
-      "Page_Invoicetemplate_bannerLists",
-      "Page_Invoicetemplate_carouselContent",
-      "Page_Invoicetemplate_groupColumnOne",
-      "Page_Invoicetemplate_groupColumnTwo",
-      "Page_Mediacenter",
-      "Page_Mediacenter_media",
-      "Page_Mediacenter_twoColumn",
-      "Page_Newprob",
-      "Page_Partneracf",
-      "Page_Partneracf_howItWorks",
-      "Page_Partneracf_threeColumn",
-      "Page_Productsacf",
-      "Page_Productsacf_bannerListItems",
-      "Page_Productsacf_productsCards",
-      "Page_Standardpage",
-      "Page_Successstoriesacf",
-      "Page_Successstoriesacf_carouselSlider",
-      "Page_Successstoriesacf_pageLargeSlider",
-      "Page_Successstoriesacf_suggestedResources",
-      "Page_Threecolumnstaticpage",
-      "Page_Threecolumnstaticpage_Banner",
-      "Page_Threecolumnstaticpage_cards",
-      "Post_Blogsacf",
-      "Post_Invoicetemplate",
-      "Post_Invoicetemplate_bannerLists",
-      "Post_Invoicetemplate_carouselContent",
-      "Post_Invoicetemplate_groupColumnOne",
-      "Post_Invoicetemplate_groupColumnTwo",
-      "PressCoverage_Invoicetemplate",
-      "PressCoverage_Invoicetemplate_bannerLists",
-      "PressCoverage_Invoicetemplate_carouselContent",
-      "PressCoverage_Invoicetemplate_groupColumnOne",
-      "PressCoverage_Invoicetemplate_groupColumnTwo",
-      "PressRelease_Invoicetemplate",
-      "PressRelease_Invoicetemplate_bannerLists",
-      "PressRelease_Invoicetemplate_carouselContent",
-      "PressRelease_Invoicetemplate_groupColumnOne",
-      "PressRelease_Invoicetemplate_groupColumnTwo",
-      "Productos_Invoicetemplate",
-      "Productos_Invoicetemplate_bannerLists",
-      "Productos_Invoicetemplate_carouselContent",
-      "Productos_Invoicetemplate_groupColumnOne",
-      "Productos_Invoicetemplate_groupColumnTwo",
-      "ProductsService_Faqacf",
-      "ProductsService_Faqacf_faqs",
-      "ProductsService_Individualproducts",
-      "ProductsService_Individualproducts_bannerData",
-      "ProductsService_Individualproducts_blogs",
-      "ProductsService_Individualproducts_groupColumn",
-      "ProductsService_Invoicetemplate",
-      "ProductsService_Invoicetemplate_bannerLists",
-      "ProductsService_Invoicetemplate_carouselContent",
-      "ProductsService_Invoicetemplate_groupColumnOne",
-      "ProductsService_Invoicetemplate_groupColumnTwo",
-      "ProductsService_Productssubmenu",
-      "ProductsService_Productssubmenu_menuName",
-      "TeamMember_Invoicetemplate",
-      "TeamMember_Invoicetemplate_bannerLists",
-      "TeamMember_Invoicetemplate_carouselContent",
-      "TeamMember_Invoicetemplate_groupColumnOne",
-      "TeamMember_Invoicetemplate_groupColumnTwo",
-    ],
+    HierarchicalContentNode: ["MediaItem", "Page", "ProductsService"],
+    NodeWithComments: ["MediaItem", "Page", "Post"],
     MenuItemObjectUnion: [
       "Category",
       "Page",
@@ -10152,97 +9764,6 @@ export const generatedSchema = {
     NodeWithTrackbacks: ["Post"],
   },
 } as const;
-
-/**
- * A Field Group registered by ACF
- */
-export interface AcfFieldGroup {
-  __typename?:
-    | "MediaItem_Invoicetemplate"
-    | "MediaItem_Invoicetemplate_bannerLists"
-    | "MediaItem_Invoicetemplate_carouselContent"
-    | "MediaItem_Invoicetemplate_groupColumnOne"
-    | "MediaItem_Invoicetemplate_groupColumnTwo"
-    | "Page_Aboutus"
-    | "Page_Aboutus_meetTeam"
-    | "Page_Aboutus_ourHistory"
-    | "Page_Aboutus_ourHistoryRow"
-    | "Page_Accordiondata"
-    | "Page_Accordiondata_accordion"
-    | "Page_Acfcontact"
-    | "Page_Carouselacf"
-    | "Page_Carouselacf_carouselData"
-    | "Page_Events"
-    | "Page_Events_Banner"
-    | "Page_Events_eventDetails"
-    | "Page_Invoicetemplate"
-    | "Page_Invoicetemplate_bannerLists"
-    | "Page_Invoicetemplate_carouselContent"
-    | "Page_Invoicetemplate_groupColumnOne"
-    | "Page_Invoicetemplate_groupColumnTwo"
-    | "Page_Mediacenter"
-    | "Page_Mediacenter_media"
-    | "Page_Mediacenter_twoColumn"
-    | "Page_Newprob"
-    | "Page_Partneracf"
-    | "Page_Partneracf_howItWorks"
-    | "Page_Partneracf_threeColumn"
-    | "Page_Productsacf"
-    | "Page_Productsacf_bannerListItems"
-    | "Page_Productsacf_productsCards"
-    | "Page_Standardpage"
-    | "Page_Successstoriesacf"
-    | "Page_Successstoriesacf_carouselSlider"
-    | "Page_Successstoriesacf_pageLargeSlider"
-    | "Page_Successstoriesacf_suggestedResources"
-    | "Page_Threecolumnstaticpage"
-    | "Page_Threecolumnstaticpage_Banner"
-    | "Page_Threecolumnstaticpage_cards"
-    | "Post_Blogsacf"
-    | "Post_Invoicetemplate"
-    | "Post_Invoicetemplate_bannerLists"
-    | "Post_Invoicetemplate_carouselContent"
-    | "Post_Invoicetemplate_groupColumnOne"
-    | "Post_Invoicetemplate_groupColumnTwo"
-    | "PressCoverage_Invoicetemplate"
-    | "PressCoverage_Invoicetemplate_bannerLists"
-    | "PressCoverage_Invoicetemplate_carouselContent"
-    | "PressCoverage_Invoicetemplate_groupColumnOne"
-    | "PressCoverage_Invoicetemplate_groupColumnTwo"
-    | "PressRelease_Invoicetemplate"
-    | "PressRelease_Invoicetemplate_bannerLists"
-    | "PressRelease_Invoicetemplate_carouselContent"
-    | "PressRelease_Invoicetemplate_groupColumnOne"
-    | "PressRelease_Invoicetemplate_groupColumnTwo"
-    | "Productos_Invoicetemplate"
-    | "Productos_Invoicetemplate_bannerLists"
-    | "Productos_Invoicetemplate_carouselContent"
-    | "Productos_Invoicetemplate_groupColumnOne"
-    | "Productos_Invoicetemplate_groupColumnTwo"
-    | "ProductsService_Faqacf"
-    | "ProductsService_Faqacf_faqs"
-    | "ProductsService_Individualproducts"
-    | "ProductsService_Individualproducts_bannerData"
-    | "ProductsService_Individualproducts_blogs"
-    | "ProductsService_Individualproducts_groupColumn"
-    | "ProductsService_Invoicetemplate"
-    | "ProductsService_Invoicetemplate_bannerLists"
-    | "ProductsService_Invoicetemplate_carouselContent"
-    | "ProductsService_Invoicetemplate_groupColumnOne"
-    | "ProductsService_Invoicetemplate_groupColumnTwo"
-    | "ProductsService_Productssubmenu"
-    | "ProductsService_Productssubmenu_menuName"
-    | "TeamMember_Invoicetemplate"
-    | "TeamMember_Invoicetemplate_bannerLists"
-    | "TeamMember_Invoicetemplate_carouselContent"
-    | "TeamMember_Invoicetemplate_groupColumnOne"
-    | "TeamMember_Invoicetemplate_groupColumnTwo";
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  $on: $AcfFieldGroup;
-}
 
 /**
  * Avatars are profile images for users. WordPress by default uses the Gravatar service to host and fetch avatars from.
@@ -11018,6 +10539,7 @@ export interface ConditionalTags {
  */
 export interface ContentNode {
   __typename?:
+    | "Homecolumn"
     | "MediaItem"
     | "Page"
     | "Post"
@@ -11572,6 +11094,21 @@ export interface CreateCommentPayload {
 }
 
 /**
+ * The payload for the createHomecolumn mutation
+ */
+export interface CreateHomecolumnPayload {
+  __typename?: "CreateHomecolumnPayload";
+  /**
+   * If a &#039;clientMutationId&#039; input is provided to the mutation, it will be returned as output on the mutation. This ID can be used by the client to track the progress of mutations and catch possible duplicate mutation submissions.
+   */
+  clientMutationId?: Maybe<ScalarsEnums["String"]>;
+  /**
+   * The Post object mutation type.
+   */
+  homecolumn?: Maybe<Homecolumn>;
+}
+
+/**
  * The payload for the createMediaItem mutation
  */
 export interface CreateMediaItemPayload {
@@ -11743,6 +11280,7 @@ export interface DatabaseIdentifier {
   __typename?:
     | "Category"
     | "Comment"
+    | "Homecolumn"
     | "MediaItem"
     | "Menu"
     | "MenuItem"
@@ -11810,6 +11348,25 @@ export interface DeleteCommentPayload {
    * The deleted comment ID
    */
   deletedId?: Maybe<ScalarsEnums["ID"]>;
+}
+
+/**
+ * The payload for the deleteHomecolumn mutation
+ */
+export interface DeleteHomecolumnPayload {
+  __typename?: "DeleteHomecolumnPayload";
+  /**
+   * If a &#039;clientMutationId&#039; input is provided to the mutation, it will be returned as output on the mutation. This ID can be used by the client to track the progress of mutations and catch possible duplicate mutation submissions.
+   */
+  clientMutationId?: Maybe<ScalarsEnums["String"]>;
+  /**
+   * The ID of the deleted object
+   */
+  deletedId?: Maybe<ScalarsEnums["ID"]>;
+  /**
+   * The object before it was deleted
+   */
+  homecolumn?: Maybe<Homecolumn>;
 }
 
 /**
@@ -12435,6 +11992,196 @@ export interface HierarchicalTermNode {
 }
 
 /**
+ * The homecolumn type
+ */
+export interface Homecolumn {
+  __typename?: "Homecolumn";
+  /**
+   * Connection between the NodeWithAuthor type and the User type
+   */
+  author?: Maybe<NodeWithAuthorToUserConnectionEdge>;
+  /**
+   * The database identifier of the author of the node
+   */
+  authorDatabaseId?: Maybe<ScalarsEnums["Int"]>;
+  /**
+   * The globally unique identifier of the author of the node
+   */
+  authorId?: Maybe<ScalarsEnums["ID"]>;
+  columnTitle?: Maybe<ScalarsEnums["String"]>;
+  conditionalTags?: Maybe<ConditionalTags>;
+  /**
+   * Connection between the ContentNode type and the ContentType type
+   */
+  contentType?: Maybe<ContentNodeToContentTypeConnectionEdge>;
+  /**
+   * The name of the Content Type the node belongs to
+   */
+  contentTypeName: ScalarsEnums["String"];
+  /**
+   * The unique identifier stored in the database
+   */
+  databaseId: ScalarsEnums["Int"];
+  /**
+   * Post publishing date.
+   */
+  date?: Maybe<ScalarsEnums["String"]>;
+  /**
+   * The publishing date set in GMT.
+   */
+  dateGmt?: Maybe<ScalarsEnums["String"]>;
+  /**
+   * The desired slug of the post
+   */
+  desiredSlug?: Maybe<ScalarsEnums["String"]>;
+  /**
+   * If a user has edited the node within the past 15 seconds, this will return the user that last edited. Null if the edit lock doesn&#039;t exist or is greater than 15 seconds
+   */
+  editingLockedBy?: Maybe<ContentNodeToEditLockConnectionEdge>;
+  /**
+   * The RSS enclosure for the object
+   */
+  enclosure?: Maybe<ScalarsEnums["String"]>;
+  /**
+   * Connection between the ContentNode type and the EnqueuedScript type
+   */
+  enqueuedScripts: (args?: {
+    /**
+     * Cursor used along with the "first" argument to reference where in the dataset to get data
+     */
+    after?: Maybe<Scalars["String"]>;
+    /**
+     * Cursor used along with the "last" argument to reference where in the dataset to get data
+     */
+    before?: Maybe<Scalars["String"]>;
+    /**
+     * The number of items to return after the referenced "after" cursor
+     */
+    first?: Maybe<Scalars["Int"]>;
+    /**
+     * The number of items to return before the referenced "before" cursor
+     */
+    last?: Maybe<Scalars["Int"]>;
+  }) => Maybe<ContentNodeToEnqueuedScriptConnection>;
+  /**
+   * Connection between the ContentNode type and the EnqueuedStylesheet type
+   */
+  enqueuedStylesheets: (args?: {
+    /**
+     * Cursor used along with the "first" argument to reference where in the dataset to get data
+     */
+    after?: Maybe<Scalars["String"]>;
+    /**
+     * Cursor used along with the "last" argument to reference where in the dataset to get data
+     */
+    before?: Maybe<Scalars["String"]>;
+    /**
+     * The number of items to return after the referenced "after" cursor
+     */
+    first?: Maybe<Scalars["Int"]>;
+    /**
+     * The number of items to return before the referenced "before" cursor
+     */
+    last?: Maybe<Scalars["Int"]>;
+  }) => Maybe<ContentNodeToEnqueuedStylesheetConnection>;
+  /**
+   * The global unique identifier for this post. This currently matches the value stored in WP_Post-&gt;guid and the guid column in the &quot;post_objects&quot; database table.
+   */
+  guid?: Maybe<ScalarsEnums["String"]>;
+  /**
+   * The id field matches the WP_Post-&gt;ID field.
+   * @deprecated Deprecated in favor of the databaseId field
+   */
+  homecolumnId: ScalarsEnums["Int"];
+  icon?: Maybe<MediaItem>;
+  /**
+   * The globally unique identifier of the homecolumn object.
+   */
+  id: ScalarsEnums["ID"];
+  /**
+   * Whether the node is a Content Node
+   */
+  isContentNode: ScalarsEnums["Boolean"];
+  /**
+   * Whether the object is a node in the preview state
+   */
+  isPreview?: Maybe<ScalarsEnums["Boolean"]>;
+  /**
+   * Whether the object is restricted from the current viewer
+   */
+  isRestricted?: Maybe<ScalarsEnums["Boolean"]>;
+  /**
+   * Whether the node is a Term
+   */
+  isTermNode: ScalarsEnums["Boolean"];
+  /**
+   * The user that most recently edited the node
+   */
+  lastEditedBy?: Maybe<ContentNodeToEditLastConnectionEdge>;
+  /**
+   * The permalink of the post
+   */
+  link?: Maybe<ScalarsEnums["String"]>;
+  /**
+   * The local modified time for a post. If a post was recently updated the modified field will change to match the corresponding time.
+   */
+  modified?: Maybe<ScalarsEnums["String"]>;
+  /**
+   * The GMT modified time for a post. If a post was recently updated the modified field will change to match the corresponding time in GMT.
+   */
+  modifiedGmt?: Maybe<ScalarsEnums["String"]>;
+  /**
+   * Connection between the homecolumn type and the homecolumn type
+   */
+  preview?: Maybe<HomecolumnToPreviewConnectionEdge>;
+  /**
+   * The database id of the preview node
+   */
+  previewRevisionDatabaseId?: Maybe<ScalarsEnums["Int"]>;
+  /**
+   * Whether the object is a node in the preview state
+   */
+  previewRevisionId?: Maybe<ScalarsEnums["ID"]>;
+  /**
+   * The uri slug for the post. This is equivalent to the WP_Post-&gt;post_name field and the post_name column in the database for the &quot;post_objects&quot; table.
+   */
+  slug?: Maybe<ScalarsEnums["String"]>;
+  /**
+   * The current status of the object
+   */
+  status?: Maybe<ScalarsEnums["String"]>;
+  /**
+   * The template assigned to the node
+   */
+  template?: Maybe<ContentTemplate>;
+  templates?: Maybe<Array<Maybe<ScalarsEnums["String"]>>>;
+  /**
+   * The title of the post. This is currently just the raw title. An amendment to support rendered title needs to be made.
+   */
+  title: (args?: {
+    /**
+     * Format of the field output
+     */
+    format?: Maybe<PostObjectFieldFormatEnum>;
+  }) => Maybe<ScalarsEnums["String"]>;
+  /**
+   * The unique resource identifier path
+   */
+  uri?: Maybe<ScalarsEnums["String"]>;
+}
+
+/**
+ * Connection between the homecolumn type and the homecolumn type
+ */
+export interface HomecolumnToPreviewConnectionEdge {
+  __typename?: "HomecolumnToPreviewConnectionEdge";
+  /**
+   * The node of the connection, without the edges
+   */
+  node?: Maybe<Homecolumn>;
+}
+
+/**
  * File details for a Media Item
  */
 export interface MediaDetails {
@@ -12676,10 +12423,6 @@ export interface MediaItem {
    */
   id: ScalarsEnums["ID"];
   /**
-   * Added to the GraphQL Schema because the ACF Field Group &quot;Invoice Template ACF&quot; was set to Show in GraphQL.
-   */
-  invoiceTemplate?: Maybe<MediaItem_Invoicetemplate>;
-  /**
    * Whether the node is a Content Node
    */
   isContentNode: ScalarsEnums["Boolean"];
@@ -12894,89 +12637,6 @@ export interface MediaItemToCommentConnectionEdge {
    * The item at the end of the edge
    */
   node?: Maybe<Comment>;
-}
-
-/**
- * Field Group
- */
-export interface MediaItem_Invoicetemplate {
-  __typename?: "MediaItem_Invoicetemplate";
-  applyNow?: Maybe<ScalarsEnums["String"]>;
-  bannerDescription?: Maybe<ScalarsEnums["String"]>;
-  bannerForm?: Maybe<ScalarsEnums["String"]>;
-  bannerImage?: Maybe<MediaItem>;
-  bannerLists?: Maybe<Array<Maybe<MediaItem_Invoicetemplate_bannerLists>>>;
-  bannerTitle?: Maybe<ScalarsEnums["String"]>;
-  carouselContent?: Maybe<
-    Array<Maybe<MediaItem_Invoicetemplate_carouselContent>>
-  >;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  groupColumnOne?: Maybe<
-    Array<Maybe<MediaItem_Invoicetemplate_groupColumnOne>>
-  >;
-  groupColumnTitle?: Maybe<ScalarsEnums["String"]>;
-  groupColumnTitleTwo?: Maybe<ScalarsEnums["String"]>;
-  groupColumnTwo?: Maybe<
-    Array<Maybe<MediaItem_Invoicetemplate_groupColumnTwo>>
-  >;
-  invoiceMobileBanner?: Maybe<MediaItem>;
-}
-
-/**
- * Field Group
- */
-export interface MediaItem_Invoicetemplate_bannerLists {
-  __typename?: "MediaItem_Invoicetemplate_bannerLists";
-  bannerList?: Maybe<ScalarsEnums["String"]>;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  listTitle?: Maybe<ScalarsEnums["String"]>;
-}
-
-/**
- * Field Group
- */
-export interface MediaItem_Invoicetemplate_carouselContent {
-  __typename?: "MediaItem_Invoicetemplate_carouselContent";
-  carouselContent?: Maybe<ScalarsEnums["String"]>;
-  carouselImage?: Maybe<MediaItem>;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-}
-
-/**
- * Field Group
- */
-export interface MediaItem_Invoicetemplate_groupColumnOne {
-  __typename?: "MediaItem_Invoicetemplate_groupColumnOne";
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  groupOneContent?: Maybe<ScalarsEnums["String"]>;
-  groupOneImage?: Maybe<MediaItem>;
-  groupOneTitle?: Maybe<ScalarsEnums["String"]>;
-}
-
-/**
- * Field Group
- */
-export interface MediaItem_Invoicetemplate_groupColumnTwo {
-  __typename?: "MediaItem_Invoicetemplate_groupColumnTwo";
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  groupContent?: Maybe<ScalarsEnums["String"]>;
-  groupImage?: Maybe<MediaItem>;
-  groupTitle?: Maybe<ScalarsEnums["String"]>;
 }
 
 /**
@@ -13334,6 +12994,7 @@ export interface Node {
     | "ContentType"
     | "EnqueuedScript"
     | "EnqueuedStylesheet"
+    | "Homecolumn"
     | "MediaItem"
     | "Menu"
     | "MenuItem"
@@ -13362,7 +13023,13 @@ export interface Node {
  * A node that can have an author assigned to it
  */
 export interface NodeWithAuthor {
-  __typename?: "MediaItem" | "Page" | "Post" | "Productos" | "TeamMember";
+  __typename?:
+    | "Homecolumn"
+    | "MediaItem"
+    | "Page"
+    | "Post"
+    | "Productos"
+    | "TeamMember";
   /**
    * Connection between the NodeWithAuthor type and the User type
    */
@@ -13665,6 +13332,7 @@ export interface NodeWithRevisionsToContentNodeConnectionEdge {
  */
 export interface NodeWithTemplate {
   __typename?:
+    | "Homecolumn"
     | "MediaItem"
     | "Page"
     | "Post"
@@ -13685,6 +13353,7 @@ export interface NodeWithTemplate {
  */
 export interface NodeWithTitle {
   __typename?:
+    | "Homecolumn"
     | "MediaItem"
     | "Page"
     | "Post"
@@ -13731,26 +13400,6 @@ export interface NodeWithTrackbacks {
 export interface Page {
   __typename?: "Page";
   /**
-   * Added to the GraphQL Schema because the ACF Field Group &quot;ACF contact&quot; was set to Show in GraphQL.
-   */
-  ACFcontact?: Maybe<Page_Acfcontact>;
-  /**
-   * Added to the GraphQL Schema because the ACF Field Group &quot;Partner ACF&quot; was set to Show in GraphQL.
-   */
-  PartnerACF?: Maybe<Page_Partneracf>;
-  /**
-   * Added to the GraphQL Schema because the ACF Field Group &quot;Static Page - 3 Column&quot; was set to Show in GraphQL.
-   */
-  ThreeColumnStaticPage?: Maybe<Page_Threecolumnstaticpage>;
-  /**
-   * Added to the GraphQL Schema because the ACF Field Group &quot;About Us ACF&quot; was set to Show in GraphQL.
-   */
-  aboutUs?: Maybe<Page_Aboutus>;
-  /**
-   * Added to the GraphQL Schema because the ACF Field Group &quot;Accordion Data&quot; was set to Show in GraphQL.
-   */
-  accordionData?: Maybe<Page_Accordiondata>;
-  /**
    * Returns ancestors of the node. Default ordered as lowest (closest to the child) to highest (closest to the root).
    */
   ancestors: (args?: {
@@ -13791,10 +13440,6 @@ export interface Page {
    * bodyClasses
    */
   bodyClasses?: Maybe<ScalarsEnums["String"]>;
-  /**
-   * Added to the GraphQL Schema because the ACF Field Group &quot;Carousel ACF&quot; was set to Show in GraphQL.
-   */
-  carouselAcf?: Maybe<Page_Carouselacf>;
   /**
    * Connection between the HierarchicalContentNode type and the ContentNode type
    */
@@ -13938,10 +13583,6 @@ export interface Page {
     last?: Maybe<Scalars["Int"]>;
   }) => Maybe<ContentNodeToEnqueuedStylesheetConnection>;
   /**
-   * Added to the GraphQL Schema because the ACF Field Group &quot;Events&quot; was set to Show in GraphQL.
-   */
-  events?: Maybe<Page_Events>;
-  /**
    * Connection between the NodeWithFeaturedImage type and the MediaItem type
    */
   featuredImage?: Maybe<NodeWithFeaturedImageToMediaItemConnectionEdge>;
@@ -13961,10 +13602,6 @@ export interface Page {
    * The globally unique identifier of the page object.
    */
   id: ScalarsEnums["ID"];
-  /**
-   * Added to the GraphQL Schema because the ACF Field Group &quot;Invoice Template ACF&quot; was set to Show in GraphQL.
-   */
-  invoiceTemplate?: Maybe<Page_Invoicetemplate>;
   /**
    * Whether the node is a Content Node
    */
@@ -14006,10 +13643,6 @@ export interface Page {
    */
   link?: Maybe<ScalarsEnums["String"]>;
   /**
-   * Added to the GraphQL Schema because the ACF Field Group &quot;Media Center&quot; was set to Show in GraphQL.
-   */
-  mediaCenter?: Maybe<Page_Mediacenter>;
-  /**
    * A field used for ordering posts. This is typically used with nav menu items or for special ordering of hierarchical content types.
    */
   menuOrder?: Maybe<ScalarsEnums["Int"]>;
@@ -14021,10 +13654,6 @@ export interface Page {
    * The GMT modified time for a post. If a post was recently updated the modified field will change to match the corresponding time in GMT.
    */
   modifiedGmt?: Maybe<ScalarsEnums["String"]>;
-  /**
-   * Added to the GraphQL Schema because the ACF Field Group &quot;New Prob&quot; was set to Show in GraphQL.
-   */
-  newProb?: Maybe<Page_Newprob>;
   /**
    * The id field matches the WP_Post-&gt;ID field.
    * @deprecated Deprecated in favor of the databaseId field
@@ -14054,10 +13683,6 @@ export interface Page {
    * Whether the object is a node in the preview state
    */
   previewRevisionId?: Maybe<ScalarsEnums["ID"]>;
-  /**
-   * Added to the GraphQL Schema because the ACF Field Group &quot;Products Home ACF&quot; was set to Show in GraphQL.
-   */
-  productsAcf?: Maybe<Page_Productsacf>;
   /**
    * If the current node is a revision, this field exposes the node this is a revision of. Returns null if the node is not a revision of another node.
    */
@@ -14092,17 +13717,9 @@ export interface Page {
    */
   slug?: Maybe<ScalarsEnums["String"]>;
   /**
-   * Added to the GraphQL Schema because the ACF Field Group &quot;Standard Page&quot; was set to Show in GraphQL.
-   */
-  standardPage?: Maybe<Page_Standardpage>;
-  /**
    * The current status of the object
    */
   status?: Maybe<ScalarsEnums["String"]>;
-  /**
-   * Added to the GraphQL Schema because the ACF Field Group &quot;Success Stories&quot; was set to Show in GraphQL.
-   */
-  successStoriesACF?: Maybe<Page_Successstoriesacf>;
   /**
    * The template assigned to a node of content
    */
@@ -14203,530 +13820,6 @@ export interface PageToRevisionConnectionEdge {
 }
 
 /**
- * Field Group
- */
-export interface Page_Aboutus {
-  __typename?: "Page_Aboutus";
-  aboutDescription?: Maybe<ScalarsEnums["String"]>;
-  bannerImage?: Maybe<MediaItem>;
-  bannerTitle?: Maybe<ScalarsEnums["String"]>;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  footeContent?: Maybe<ScalarsEnums["String"]>;
-  meetTeam?: Maybe<Array<Maybe<Page_Aboutus_meetTeam>>>;
-  mobileImage?: Maybe<MediaItem>;
-  ourHistory?: Maybe<Array<Maybe<Page_Aboutus_ourHistory>>>;
-  ourHistoryRow?: Maybe<Array<Maybe<Page_Aboutus_ourHistoryRow>>>;
-}
-
-/**
- * Field Group
- */
-export interface Page_Aboutus_meetTeam {
-  __typename?: "Page_Aboutus_meetTeam";
-  careerDetails?: Maybe<ScalarsEnums["String"]>;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  linkedin?: Maybe<ScalarsEnums["String"]>;
-  name?: Maybe<ScalarsEnums["String"]>;
-  profileImage?: Maybe<MediaItem>;
-  role?: Maybe<ScalarsEnums["String"]>;
-}
-
-/**
- * Field Group
- */
-export interface Page_Aboutus_ourHistory {
-  __typename?: "Page_Aboutus_ourHistory";
-  businessFunded?: Maybe<ScalarsEnums["String"]>;
-  companyData?: Maybe<ScalarsEnums["String"]>;
-  companyYear?: Maybe<ScalarsEnums["String"]>;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  fundedAmount?: Maybe<ScalarsEnums["String"]>;
-  noOfEmployees?: Maybe<ScalarsEnums["String"]>;
-  svgIcon?: Maybe<MediaItem>;
-}
-
-/**
- * Field Group
- */
-export interface Page_Aboutus_ourHistoryRow {
-  __typename?: "Page_Aboutus_ourHistoryRow";
-  businessFunded?: Maybe<ScalarsEnums["String"]>;
-  companyData?: Maybe<ScalarsEnums["String"]>;
-  companyYear?: Maybe<ScalarsEnums["String"]>;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  fundedAmount?: Maybe<ScalarsEnums["String"]>;
-  noOfEmployees?: Maybe<ScalarsEnums["String"]>;
-  svgIcon?: Maybe<MediaItem>;
-}
-
-/**
- * Field Group
- */
-export interface Page_Accordiondata {
-  __typename?: "Page_Accordiondata";
-  accordion?: Maybe<Array<Maybe<Page_Accordiondata_accordion>>>;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-}
-
-/**
- * Field Group
- */
-export interface Page_Accordiondata_accordion {
-  __typename?: "Page_Accordiondata_accordion";
-  accordionContent?: Maybe<ScalarsEnums["String"]>;
-  accordionTitle?: Maybe<ScalarsEnums["String"]>;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-}
-
-/**
- * Field Group
- */
-export interface Page_Acfcontact {
-  __typename?: "Page_Acfcontact";
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  form?: Maybe<ScalarsEnums["String"]>;
-  image?: Maybe<MediaItem>;
-  mobileImage?: Maybe<MediaItem>;
-}
-
-/**
- * Field Group
- */
-export interface Page_Carouselacf {
-  __typename?: "Page_Carouselacf";
-  carouselData?: Maybe<Array<Maybe<Page_Carouselacf_carouselData>>>;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-}
-
-/**
- * Field Group
- */
-export interface Page_Carouselacf_carouselData {
-  __typename?: "Page_Carouselacf_carouselData";
-  carouselContent?: Maybe<ScalarsEnums["String"]>;
-  carouselImage?: Maybe<MediaItem>;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-}
-
-/**
- * Field Group
- */
-export interface Page_Events {
-  __typename?: "Page_Events";
-  banner?: Maybe<Page_Events_Banner>;
-  eventDetails?: Maybe<Array<Maybe<Page_Events_eventDetails>>>;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-}
-
-/**
- * Field Group
- */
-export interface Page_Events_Banner {
-  __typename?: "Page_Events_Banner";
-  bannerButton?: Maybe<ScalarsEnums["String"]>;
-  bannerDescription?: Maybe<ScalarsEnums["String"]>;
-  bannerImage?: Maybe<MediaItem>;
-  bannerTitle?: Maybe<ScalarsEnums["String"]>;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  mobileBannerImage?: Maybe<MediaItem>;
-}
-
-/**
- * Field Group
- */
-export interface Page_Events_eventDetails {
-  __typename?: "Page_Events_eventDetails";
-  eventTitle?: Maybe<ScalarsEnums["String"]>;
-  events?: Maybe<ScalarsEnums["String"]>;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-}
-
-/**
- * Field Group
- */
-export interface Page_Invoicetemplate {
-  __typename?: "Page_Invoicetemplate";
-  applyNow?: Maybe<ScalarsEnums["String"]>;
-  bannerDescription?: Maybe<ScalarsEnums["String"]>;
-  bannerForm?: Maybe<ScalarsEnums["String"]>;
-  bannerImage?: Maybe<MediaItem>;
-  bannerLists?: Maybe<Array<Maybe<Page_Invoicetemplate_bannerLists>>>;
-  bannerTitle?: Maybe<ScalarsEnums["String"]>;
-  carouselContent?: Maybe<Array<Maybe<Page_Invoicetemplate_carouselContent>>>;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  groupColumnOne?: Maybe<Array<Maybe<Page_Invoicetemplate_groupColumnOne>>>;
-  groupColumnTitle?: Maybe<ScalarsEnums["String"]>;
-  groupColumnTitleTwo?: Maybe<ScalarsEnums["String"]>;
-  groupColumnTwo?: Maybe<Array<Maybe<Page_Invoicetemplate_groupColumnTwo>>>;
-  invoiceMobileBanner?: Maybe<MediaItem>;
-}
-
-/**
- * Field Group
- */
-export interface Page_Invoicetemplate_bannerLists {
-  __typename?: "Page_Invoicetemplate_bannerLists";
-  bannerList?: Maybe<ScalarsEnums["String"]>;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  listTitle?: Maybe<ScalarsEnums["String"]>;
-}
-
-/**
- * Field Group
- */
-export interface Page_Invoicetemplate_carouselContent {
-  __typename?: "Page_Invoicetemplate_carouselContent";
-  carouselContent?: Maybe<ScalarsEnums["String"]>;
-  carouselImage?: Maybe<MediaItem>;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-}
-
-/**
- * Field Group
- */
-export interface Page_Invoicetemplate_groupColumnOne {
-  __typename?: "Page_Invoicetemplate_groupColumnOne";
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  groupOneContent?: Maybe<ScalarsEnums["String"]>;
-  groupOneImage?: Maybe<MediaItem>;
-  groupOneTitle?: Maybe<ScalarsEnums["String"]>;
-}
-
-/**
- * Field Group
- */
-export interface Page_Invoicetemplate_groupColumnTwo {
-  __typename?: "Page_Invoicetemplate_groupColumnTwo";
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  groupContent?: Maybe<ScalarsEnums["String"]>;
-  groupImage?: Maybe<MediaItem>;
-  groupTitle?: Maybe<ScalarsEnums["String"]>;
-}
-
-/**
- * Field Group
- */
-export interface Page_Mediacenter {
-  __typename?: "Page_Mediacenter";
-  bannerDescription?: Maybe<ScalarsEnums["String"]>;
-  bannerImage?: Maybe<MediaItem>;
-  bannerTitle?: Maybe<ScalarsEnums["String"]>;
-  button?: Maybe<ScalarsEnums["String"]>;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  media?: Maybe<Array<Maybe<Page_Mediacenter_media>>>;
-  mobileBanner?: Maybe<MediaItem>;
-  twoColumn?: Maybe<Array<Maybe<Page_Mediacenter_twoColumn>>>;
-}
-
-/**
- * Field Group
- */
-export interface Page_Mediacenter_media {
-  __typename?: "Page_Mediacenter_media";
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  mediaMouseOverText?: Maybe<ScalarsEnums["String"]>;
-  mediaTitle?: Maybe<MediaItem>;
-}
-
-/**
- * Field Group
- */
-export interface Page_Mediacenter_twoColumn {
-  __typename?: "Page_Mediacenter_twoColumn";
-  callUs?: Maybe<MediaItem>;
-  columnContent?: Maybe<ScalarsEnums["String"]>;
-  columnTitle?: Maybe<ScalarsEnums["String"]>;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-}
-
-/**
- * Field Group
- */
-export interface Page_Newprob {
-  __typename?: "Page_Newprob";
-  /**
-   * Upload Image
-   */
-  desktop?: Maybe<MediaItem>;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-}
-
-/**
- * Field Group
- */
-export interface Page_Partneracf {
-  __typename?: "Page_Partneracf";
-  bannerButton?: Maybe<ScalarsEnums["String"]>;
-  bannerDescription?: Maybe<ScalarsEnums["String"]>;
-  bannerImage?: Maybe<MediaItem>;
-  bannerTitle?: Maybe<ScalarsEnums["String"]>;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  howItWorks?: Maybe<Array<Maybe<Page_Partneracf_howItWorks>>>;
-  joinToday?: Maybe<ScalarsEnums["String"]>;
-  mobileBanner?: Maybe<MediaItem>;
-  rightPartnershipForYou?: Maybe<ScalarsEnums["String"]>;
-  threeColumn?: Maybe<Array<Maybe<Page_Partneracf_threeColumn>>>;
-}
-
-/**
- * Field Group
- */
-export interface Page_Partneracf_howItWorks {
-  __typename?: "Page_Partneracf_howItWorks";
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  svgIcon?: Maybe<MediaItem>;
-  title?: Maybe<ScalarsEnums["String"]>;
-}
-
-/**
- * Field Group
- */
-export interface Page_Partneracf_threeColumn {
-  __typename?: "Page_Partneracf_threeColumn";
-  cardContent?: Maybe<ScalarsEnums["String"]>;
-  cardTitle?: Maybe<ScalarsEnums["String"]>;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  svgIcon?: Maybe<MediaItem>;
-}
-
-/**
- * Field Group
- */
-export interface Page_Productsacf {
-  __typename?: "Page_Productsacf";
-  bannerForm?: Maybe<ScalarsEnums["String"]>;
-  bannerListItems?: Maybe<Array<Maybe<Page_Productsacf_bannerListItems>>>;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  getStartedToday?: Maybe<ScalarsEnums["String"]>;
-  mobileBannerImage?: Maybe<MediaItem>;
-  ourGoal?: Maybe<ScalarsEnums["String"]>;
-  pageBanner?: Maybe<MediaItem>;
-  pageBannerDescription?: Maybe<ScalarsEnums["String"]>;
-  pageBannerTitle?: Maybe<ScalarsEnums["String"]>;
-  productsCards?: Maybe<Array<Maybe<Page_Productsacf_productsCards>>>;
-}
-
-/**
- * Field Group
- */
-export interface Page_Productsacf_bannerListItems {
-  __typename?: "Page_Productsacf_bannerListItems";
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  listsItems?: Maybe<ScalarsEnums["String"]>;
-  title?: Maybe<ScalarsEnums["String"]>;
-}
-
-/**
- * Field Group
- */
-export interface Page_Productsacf_productsCards {
-  __typename?: "Page_Productsacf_productsCards";
-  cardButton?: Maybe<ScalarsEnums["String"]>;
-  cardContent?: Maybe<ScalarsEnums["String"]>;
-  cardSlug?: Maybe<ScalarsEnums["String"]>;
-  cardTitle?: Maybe<ScalarsEnums["String"]>;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  svgIcon?: Maybe<MediaItem>;
-}
-
-/**
- * Field Group
- */
-export interface Page_Standardpage {
-  __typename?: "Page_Standardpage";
-  featuredImageButton?: Maybe<ScalarsEnums["String"]>;
-  featuredImageTitle?: Maybe<ScalarsEnums["String"]>;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-}
-
-/**
- * Field Group
- */
-export interface Page_Successstoriesacf {
-  __typename?: "Page_Successstoriesacf";
-  carouselSlider?: Maybe<Array<Maybe<Page_Successstoriesacf_carouselSlider>>>;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  footerContent?: Maybe<ScalarsEnums["String"]>;
-  pageLargeSlider?: Maybe<Array<Maybe<Page_Successstoriesacf_pageLargeSlider>>>;
-  suggestedResources?: Maybe<
-    Array<Maybe<Page_Successstoriesacf_suggestedResources>>
-  >;
-}
-
-/**
- * Field Group
- */
-export interface Page_Successstoriesacf_carouselSlider {
-  __typename?: "Page_Successstoriesacf_carouselSlider";
-  carouselContent?: Maybe<ScalarsEnums["String"]>;
-  carouselImage?: Maybe<MediaItem>;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-}
-
-/**
- * Field Group
- */
-export interface Page_Successstoriesacf_pageLargeSlider {
-  __typename?: "Page_Successstoriesacf_pageLargeSlider";
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  sliderContent?: Maybe<ScalarsEnums["String"]>;
-  sliderImage?: Maybe<MediaItem>;
-}
-
-/**
- * Field Group
- */
-export interface Page_Successstoriesacf_suggestedResources {
-  __typename?: "Page_Successstoriesacf_suggestedResources";
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  link?: Maybe<ScalarsEnums["String"]>;
-  resourceContent?: Maybe<ScalarsEnums["String"]>;
-  svgIcon?: Maybe<MediaItem>;
-}
-
-/**
- * Field Group
- */
-export interface Page_Threecolumnstaticpage {
-  __typename?: "Page_Threecolumnstaticpage";
-  banner?: Maybe<Page_Threecolumnstaticpage_Banner>;
-  cards?: Maybe<Array<Maybe<Page_Threecolumnstaticpage_cards>>>;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  financeSolution?: Maybe<ScalarsEnums["String"]>;
-}
-
-/**
- * Field Group
- */
-export interface Page_Threecolumnstaticpage_Banner {
-  __typename?: "Page_Threecolumnstaticpage_Banner";
-  bannerButton?: Maybe<ScalarsEnums["String"]>;
-  bannerDescription?: Maybe<ScalarsEnums["String"]>;
-  bannerImage?: Maybe<MediaItem>;
-  bannerTitle?: Maybe<ScalarsEnums["String"]>;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  mobileBannerImage?: Maybe<MediaItem>;
-}
-
-/**
- * Field Group
- */
-export interface Page_Threecolumnstaticpage_cards {
-  __typename?: "Page_Threecolumnstaticpage_cards";
-  buttonLink?: Maybe<ScalarsEnums["String"]>;
-  cardButton?: Maybe<ScalarsEnums["String"]>;
-  cardContent?: Maybe<ScalarsEnums["String"]>;
-  cardTitle?: Maybe<ScalarsEnums["String"]>;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  svgIcon?: Maybe<MediaItem>;
-}
-
-/**
  * An plugin object
  */
 export interface Plugin {
@@ -14786,10 +13879,6 @@ export interface Post {
    * The globally unique identifier of the author of the node
    */
   authorId?: Maybe<ScalarsEnums["ID"]>;
-  /**
-   * Added to the GraphQL Schema because the ACF Field Group &quot;Blogs ACF&quot; was set to Show in GraphQL.
-   */
-  blogsAcf?: Maybe<Post_Blogsacf>;
   /**
    * bodyClasses
    */
@@ -14969,10 +14058,6 @@ export interface Post {
    * The globally unique identifier of the post object.
    */
   id: ScalarsEnums["ID"];
-  /**
-   * Added to the GraphQL Schema because the ACF Field Group &quot;Invoice Template ACF&quot; was set to Show in GraphQL.
-   */
-  invoiceTemplate?: Maybe<Post_Invoicetemplate>;
   /**
    * Whether the node is a Content Node
    */
@@ -15801,97 +14886,6 @@ export interface PostTypeLabelDetails {
 }
 
 /**
- * Field Group
- */
-export interface Post_Blogsacf {
-  __typename?: "Post_Blogsacf";
-  blogContent?: Maybe<ScalarsEnums["String"]>;
-  blogImage?: Maybe<MediaItem>;
-  blogTitle?: Maybe<ScalarsEnums["String"]>;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-}
-
-/**
- * Field Group
- */
-export interface Post_Invoicetemplate {
-  __typename?: "Post_Invoicetemplate";
-  applyNow?: Maybe<ScalarsEnums["String"]>;
-  bannerDescription?: Maybe<ScalarsEnums["String"]>;
-  bannerForm?: Maybe<ScalarsEnums["String"]>;
-  bannerImage?: Maybe<MediaItem>;
-  bannerLists?: Maybe<Array<Maybe<Post_Invoicetemplate_bannerLists>>>;
-  bannerTitle?: Maybe<ScalarsEnums["String"]>;
-  carouselContent?: Maybe<Array<Maybe<Post_Invoicetemplate_carouselContent>>>;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  groupColumnOne?: Maybe<Array<Maybe<Post_Invoicetemplate_groupColumnOne>>>;
-  groupColumnTitle?: Maybe<ScalarsEnums["String"]>;
-  groupColumnTitleTwo?: Maybe<ScalarsEnums["String"]>;
-  groupColumnTwo?: Maybe<Array<Maybe<Post_Invoicetemplate_groupColumnTwo>>>;
-  invoiceMobileBanner?: Maybe<MediaItem>;
-}
-
-/**
- * Field Group
- */
-export interface Post_Invoicetemplate_bannerLists {
-  __typename?: "Post_Invoicetemplate_bannerLists";
-  bannerList?: Maybe<ScalarsEnums["String"]>;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  listTitle?: Maybe<ScalarsEnums["String"]>;
-}
-
-/**
- * Field Group
- */
-export interface Post_Invoicetemplate_carouselContent {
-  __typename?: "Post_Invoicetemplate_carouselContent";
-  carouselContent?: Maybe<ScalarsEnums["String"]>;
-  carouselImage?: Maybe<MediaItem>;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-}
-
-/**
- * Field Group
- */
-export interface Post_Invoicetemplate_groupColumnOne {
-  __typename?: "Post_Invoicetemplate_groupColumnOne";
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  groupOneContent?: Maybe<ScalarsEnums["String"]>;
-  groupOneImage?: Maybe<MediaItem>;
-  groupOneTitle?: Maybe<ScalarsEnums["String"]>;
-}
-
-/**
- * Field Group
- */
-export interface Post_Invoicetemplate_groupColumnTwo {
-  __typename?: "Post_Invoicetemplate_groupColumnTwo";
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  groupContent?: Maybe<ScalarsEnums["String"]>;
-  groupImage?: Maybe<MediaItem>;
-  groupTitle?: Maybe<ScalarsEnums["String"]>;
-}
-
-/**
  * The PressCoverage type
  */
 export interface PressCoverage {
@@ -16000,10 +14994,6 @@ export interface PressCoverage {
    * The globally unique identifier of the press_coverage object.
    */
   id: ScalarsEnums["ID"];
-  /**
-   * Added to the GraphQL Schema because the ACF Field Group &quot;Invoice Template ACF&quot; was set to Show in GraphQL.
-   */
-  invoiceTemplate?: Maybe<PressCoverage_Invoicetemplate>;
   /**
    * Whether the node is a Content Node
    */
@@ -16152,89 +15142,6 @@ export interface PressCoverageToTermNodeConnectionEdge {
 }
 
 /**
- * Field Group
- */
-export interface PressCoverage_Invoicetemplate {
-  __typename?: "PressCoverage_Invoicetemplate";
-  applyNow?: Maybe<ScalarsEnums["String"]>;
-  bannerDescription?: Maybe<ScalarsEnums["String"]>;
-  bannerForm?: Maybe<ScalarsEnums["String"]>;
-  bannerImage?: Maybe<MediaItem>;
-  bannerLists?: Maybe<Array<Maybe<PressCoverage_Invoicetemplate_bannerLists>>>;
-  bannerTitle?: Maybe<ScalarsEnums["String"]>;
-  carouselContent?: Maybe<
-    Array<Maybe<PressCoverage_Invoicetemplate_carouselContent>>
-  >;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  groupColumnOne?: Maybe<
-    Array<Maybe<PressCoverage_Invoicetemplate_groupColumnOne>>
-  >;
-  groupColumnTitle?: Maybe<ScalarsEnums["String"]>;
-  groupColumnTitleTwo?: Maybe<ScalarsEnums["String"]>;
-  groupColumnTwo?: Maybe<
-    Array<Maybe<PressCoverage_Invoicetemplate_groupColumnTwo>>
-  >;
-  invoiceMobileBanner?: Maybe<MediaItem>;
-}
-
-/**
- * Field Group
- */
-export interface PressCoverage_Invoicetemplate_bannerLists {
-  __typename?: "PressCoverage_Invoicetemplate_bannerLists";
-  bannerList?: Maybe<ScalarsEnums["String"]>;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  listTitle?: Maybe<ScalarsEnums["String"]>;
-}
-
-/**
- * Field Group
- */
-export interface PressCoverage_Invoicetemplate_carouselContent {
-  __typename?: "PressCoverage_Invoicetemplate_carouselContent";
-  carouselContent?: Maybe<ScalarsEnums["String"]>;
-  carouselImage?: Maybe<MediaItem>;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-}
-
-/**
- * Field Group
- */
-export interface PressCoverage_Invoicetemplate_groupColumnOne {
-  __typename?: "PressCoverage_Invoicetemplate_groupColumnOne";
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  groupOneContent?: Maybe<ScalarsEnums["String"]>;
-  groupOneImage?: Maybe<MediaItem>;
-  groupOneTitle?: Maybe<ScalarsEnums["String"]>;
-}
-
-/**
- * Field Group
- */
-export interface PressCoverage_Invoicetemplate_groupColumnTwo {
-  __typename?: "PressCoverage_Invoicetemplate_groupColumnTwo";
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  groupContent?: Maybe<ScalarsEnums["String"]>;
-  groupImage?: Maybe<MediaItem>;
-  groupTitle?: Maybe<ScalarsEnums["String"]>;
-}
-
-/**
  * The PressRelease type
  */
 export interface PressRelease {
@@ -16343,10 +15250,6 @@ export interface PressRelease {
    * The globally unique identifier of the press_releases object.
    */
   id: ScalarsEnums["ID"];
-  /**
-   * Added to the GraphQL Schema because the ACF Field Group &quot;Invoice Template ACF&quot; was set to Show in GraphQL.
-   */
-  invoiceTemplate?: Maybe<PressRelease_Invoicetemplate>;
   /**
    * Whether the node is a Content Node
    */
@@ -16495,89 +15398,6 @@ export interface PressReleaseToTermNodeConnectionEdge {
 }
 
 /**
- * Field Group
- */
-export interface PressRelease_Invoicetemplate {
-  __typename?: "PressRelease_Invoicetemplate";
-  applyNow?: Maybe<ScalarsEnums["String"]>;
-  bannerDescription?: Maybe<ScalarsEnums["String"]>;
-  bannerForm?: Maybe<ScalarsEnums["String"]>;
-  bannerImage?: Maybe<MediaItem>;
-  bannerLists?: Maybe<Array<Maybe<PressRelease_Invoicetemplate_bannerLists>>>;
-  bannerTitle?: Maybe<ScalarsEnums["String"]>;
-  carouselContent?: Maybe<
-    Array<Maybe<PressRelease_Invoicetemplate_carouselContent>>
-  >;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  groupColumnOne?: Maybe<
-    Array<Maybe<PressRelease_Invoicetemplate_groupColumnOne>>
-  >;
-  groupColumnTitle?: Maybe<ScalarsEnums["String"]>;
-  groupColumnTitleTwo?: Maybe<ScalarsEnums["String"]>;
-  groupColumnTwo?: Maybe<
-    Array<Maybe<PressRelease_Invoicetemplate_groupColumnTwo>>
-  >;
-  invoiceMobileBanner?: Maybe<MediaItem>;
-}
-
-/**
- * Field Group
- */
-export interface PressRelease_Invoicetemplate_bannerLists {
-  __typename?: "PressRelease_Invoicetemplate_bannerLists";
-  bannerList?: Maybe<ScalarsEnums["String"]>;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  listTitle?: Maybe<ScalarsEnums["String"]>;
-}
-
-/**
- * Field Group
- */
-export interface PressRelease_Invoicetemplate_carouselContent {
-  __typename?: "PressRelease_Invoicetemplate_carouselContent";
-  carouselContent?: Maybe<ScalarsEnums["String"]>;
-  carouselImage?: Maybe<MediaItem>;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-}
-
-/**
- * Field Group
- */
-export interface PressRelease_Invoicetemplate_groupColumnOne {
-  __typename?: "PressRelease_Invoicetemplate_groupColumnOne";
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  groupOneContent?: Maybe<ScalarsEnums["String"]>;
-  groupOneImage?: Maybe<MediaItem>;
-  groupOneTitle?: Maybe<ScalarsEnums["String"]>;
-}
-
-/**
- * Field Group
- */
-export interface PressRelease_Invoicetemplate_groupColumnTwo {
-  __typename?: "PressRelease_Invoicetemplate_groupColumnTwo";
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  groupContent?: Maybe<ScalarsEnums["String"]>;
-  groupImage?: Maybe<MediaItem>;
-  groupTitle?: Maybe<ScalarsEnums["String"]>;
-}
-
-/**
  * The productos type
  */
 export interface Productos {
@@ -16678,10 +15498,6 @@ export interface Productos {
    */
   id: ScalarsEnums["ID"];
   /**
-   * Added to the GraphQL Schema because the ACF Field Group &quot;Invoice Template ACF&quot; was set to Show in GraphQL.
-   */
-  invoiceTemplate?: Maybe<Productos_Invoicetemplate>;
-  /**
    * Whether the node is a Content Node
    */
   isContentNode: ScalarsEnums["Boolean"];
@@ -16767,89 +15583,6 @@ export interface ProductosToPreviewConnectionEdge {
    * The node of the connection, without the edges
    */
   node?: Maybe<Productos>;
-}
-
-/**
- * Field Group
- */
-export interface Productos_Invoicetemplate {
-  __typename?: "Productos_Invoicetemplate";
-  applyNow?: Maybe<ScalarsEnums["String"]>;
-  bannerDescription?: Maybe<ScalarsEnums["String"]>;
-  bannerForm?: Maybe<ScalarsEnums["String"]>;
-  bannerImage?: Maybe<MediaItem>;
-  bannerLists?: Maybe<Array<Maybe<Productos_Invoicetemplate_bannerLists>>>;
-  bannerTitle?: Maybe<ScalarsEnums["String"]>;
-  carouselContent?: Maybe<
-    Array<Maybe<Productos_Invoicetemplate_carouselContent>>
-  >;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  groupColumnOne?: Maybe<
-    Array<Maybe<Productos_Invoicetemplate_groupColumnOne>>
-  >;
-  groupColumnTitle?: Maybe<ScalarsEnums["String"]>;
-  groupColumnTitleTwo?: Maybe<ScalarsEnums["String"]>;
-  groupColumnTwo?: Maybe<
-    Array<Maybe<Productos_Invoicetemplate_groupColumnTwo>>
-  >;
-  invoiceMobileBanner?: Maybe<MediaItem>;
-}
-
-/**
- * Field Group
- */
-export interface Productos_Invoicetemplate_bannerLists {
-  __typename?: "Productos_Invoicetemplate_bannerLists";
-  bannerList?: Maybe<ScalarsEnums["String"]>;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  listTitle?: Maybe<ScalarsEnums["String"]>;
-}
-
-/**
- * Field Group
- */
-export interface Productos_Invoicetemplate_carouselContent {
-  __typename?: "Productos_Invoicetemplate_carouselContent";
-  carouselContent?: Maybe<ScalarsEnums["String"]>;
-  carouselImage?: Maybe<MediaItem>;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-}
-
-/**
- * Field Group
- */
-export interface Productos_Invoicetemplate_groupColumnOne {
-  __typename?: "Productos_Invoicetemplate_groupColumnOne";
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  groupOneContent?: Maybe<ScalarsEnums["String"]>;
-  groupOneImage?: Maybe<MediaItem>;
-  groupOneTitle?: Maybe<ScalarsEnums["String"]>;
-}
-
-/**
- * Field Group
- */
-export interface Productos_Invoicetemplate_groupColumnTwo {
-  __typename?: "Productos_Invoicetemplate_groupColumnTwo";
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  groupContent?: Maybe<ScalarsEnums["String"]>;
-  groupImage?: Maybe<MediaItem>;
-  groupTitle?: Maybe<ScalarsEnums["String"]>;
 }
 
 /**
@@ -16992,10 +15725,6 @@ export interface ProductsService {
     last?: Maybe<Scalars["Int"]>;
   }) => Maybe<ContentNodeToEnqueuedStylesheetConnection>;
   /**
-   * Added to the GraphQL Schema because the ACF Field Group &quot;FAQ ACF&quot; was set to Show in GraphQL.
-   */
-  faqAcf?: Maybe<ProductsService_Faqacf>;
-  /**
    * Connection between the NodeWithFeaturedImage type and the MediaItem type
    */
   featuredImage?: Maybe<NodeWithFeaturedImageToMediaItemConnectionEdge>;
@@ -17015,14 +15744,6 @@ export interface ProductsService {
    * The globally unique identifier of the products_services object.
    */
   id: ScalarsEnums["ID"];
-  /**
-   * Added to the GraphQL Schema because the ACF Field Group &quot;Individual Products&quot; was set to Show in GraphQL.
-   */
-  individualProducts?: Maybe<ProductsService_Individualproducts>;
-  /**
-   * Added to the GraphQL Schema because the ACF Field Group &quot;Invoice Template ACF&quot; was set to Show in GraphQL.
-   */
-  invoiceTemplate?: Maybe<ProductsService_Invoicetemplate>;
   /**
    * Whether the node is a Content Node
    */
@@ -17117,10 +15838,6 @@ export interface ProductsService {
    * @deprecated Deprecated in favor of the databaseId field
    */
   productsServiceId: ScalarsEnums["Int"];
-  /**
-   * Added to the GraphQL Schema because the ACF Field Group &quot;Products Menu&quot; was set to Show in GraphQL.
-   */
-  productsSubMenu?: Maybe<ProductsService_Productssubmenu>;
   /**
    * If the current node is a revision, this field exposes the node this is a revision of. Returns null if the node is not a revision of another node.
    */
@@ -17314,212 +16031,6 @@ export interface ProductsServiceToTermNodeConnectionEdge {
    * The item at the end of the edge
    */
   node?: Maybe<TermNode>;
-}
-
-/**
- * Field Group
- */
-export interface ProductsService_Faqacf {
-  __typename?: "ProductsService_Faqacf";
-  faqs?: Maybe<Array<Maybe<ProductsService_Faqacf_faqs>>>;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-}
-
-/**
- * Field Group
- */
-export interface ProductsService_Faqacf_faqs {
-  __typename?: "ProductsService_Faqacf_faqs";
-  answer?: Maybe<ScalarsEnums["String"]>;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  question?: Maybe<ScalarsEnums["String"]>;
-}
-
-/**
- * Field Group
- */
-export interface ProductsService_Individualproducts {
-  __typename?: "ProductsService_Individualproducts";
-  banner?: Maybe<MediaItem>;
-  bannerData?: Maybe<
-    Array<Maybe<ProductsService_Individualproducts_bannerData>>
-  >;
-  bannerDescription?: Maybe<ScalarsEnums["String"]>;
-  blogHeading?: Maybe<ScalarsEnums["String"]>;
-  blogs?: Maybe<Array<Maybe<ProductsService_Individualproducts_blogs>>>;
-  businessLoanDescription?: Maybe<ScalarsEnums["String"]>;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  groupColumn?: Maybe<
-    Array<Maybe<ProductsService_Individualproducts_groupColumn>>
-  >;
-  howToApply?: Maybe<ScalarsEnums["String"]>;
-  mobileBannerImage?: Maybe<MediaItem>;
-  productsContent?: Maybe<ScalarsEnums["String"]>;
-  requirements?: Maybe<ScalarsEnums["String"]>;
-  title?: Maybe<ScalarsEnums["String"]>;
-  whoShould?: Maybe<ScalarsEnums["String"]>;
-}
-
-/**
- * Field Group
- */
-export interface ProductsService_Individualproducts_bannerData {
-  __typename?: "ProductsService_Individualproducts_bannerData";
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  listItems?: Maybe<ScalarsEnums["String"]>;
-  listTitle?: Maybe<ScalarsEnums["String"]>;
-}
-
-/**
- * Field Group
- */
-export interface ProductsService_Individualproducts_blogs {
-  __typename?: "ProductsService_Individualproducts_blogs";
-  blogImage?: Maybe<MediaItem>;
-  blogLink?: Maybe<ScalarsEnums["String"]>;
-  description?: Maybe<ScalarsEnums["String"]>;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  title?: Maybe<ScalarsEnums["String"]>;
-}
-
-/**
- * Field Group
- */
-export interface ProductsService_Individualproducts_groupColumn {
-  __typename?: "ProductsService_Individualproducts_groupColumn";
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  groupContent?: Maybe<ScalarsEnums["String"]>;
-  groupNumber?: Maybe<ScalarsEnums["String"]>;
-  groupTitle?: Maybe<ScalarsEnums["String"]>;
-}
-
-/**
- * Field Group
- */
-export interface ProductsService_Invoicetemplate {
-  __typename?: "ProductsService_Invoicetemplate";
-  applyNow?: Maybe<ScalarsEnums["String"]>;
-  bannerDescription?: Maybe<ScalarsEnums["String"]>;
-  bannerForm?: Maybe<ScalarsEnums["String"]>;
-  bannerImage?: Maybe<MediaItem>;
-  bannerLists?: Maybe<
-    Array<Maybe<ProductsService_Invoicetemplate_bannerLists>>
-  >;
-  bannerTitle?: Maybe<ScalarsEnums["String"]>;
-  carouselContent?: Maybe<
-    Array<Maybe<ProductsService_Invoicetemplate_carouselContent>>
-  >;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  groupColumnOne?: Maybe<
-    Array<Maybe<ProductsService_Invoicetemplate_groupColumnOne>>
-  >;
-  groupColumnTitle?: Maybe<ScalarsEnums["String"]>;
-  groupColumnTitleTwo?: Maybe<ScalarsEnums["String"]>;
-  groupColumnTwo?: Maybe<
-    Array<Maybe<ProductsService_Invoicetemplate_groupColumnTwo>>
-  >;
-  invoiceMobileBanner?: Maybe<MediaItem>;
-}
-
-/**
- * Field Group
- */
-export interface ProductsService_Invoicetemplate_bannerLists {
-  __typename?: "ProductsService_Invoicetemplate_bannerLists";
-  bannerList?: Maybe<ScalarsEnums["String"]>;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  listTitle?: Maybe<ScalarsEnums["String"]>;
-}
-
-/**
- * Field Group
- */
-export interface ProductsService_Invoicetemplate_carouselContent {
-  __typename?: "ProductsService_Invoicetemplate_carouselContent";
-  carouselContent?: Maybe<ScalarsEnums["String"]>;
-  carouselImage?: Maybe<MediaItem>;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-}
-
-/**
- * Field Group
- */
-export interface ProductsService_Invoicetemplate_groupColumnOne {
-  __typename?: "ProductsService_Invoicetemplate_groupColumnOne";
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  groupOneContent?: Maybe<ScalarsEnums["String"]>;
-  groupOneImage?: Maybe<MediaItem>;
-  groupOneTitle?: Maybe<ScalarsEnums["String"]>;
-}
-
-/**
- * Field Group
- */
-export interface ProductsService_Invoicetemplate_groupColumnTwo {
-  __typename?: "ProductsService_Invoicetemplate_groupColumnTwo";
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  groupContent?: Maybe<ScalarsEnums["String"]>;
-  groupImage?: Maybe<MediaItem>;
-  groupTitle?: Maybe<ScalarsEnums["String"]>;
-}
-
-/**
- * Field Group
- */
-export interface ProductsService_Productssubmenu {
-  __typename?: "ProductsService_Productssubmenu";
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  menuName?: Maybe<Array<Maybe<ProductsService_Productssubmenu_menuName>>>;
-}
-
-/**
- * Field Group
- */
-export interface ProductsService_Productssubmenu_menuName {
-  __typename?: "ProductsService_Productssubmenu_menuName";
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  menuImage?: Maybe<MediaItem>;
-  menuLabel?: Maybe<ScalarsEnums["String"]>;
-  menuUri?: Maybe<ScalarsEnums["String"]>;
 }
 
 /**
@@ -17818,6 +16329,40 @@ export interface RootQueryToEnqueuedStylesheetConnectionEdge {
    * The item at the end of the edge
    */
   node?: Maybe<EnqueuedStylesheet>;
+}
+
+/**
+ * Connection between the RootQuery type and the homecolumn type
+ */
+export interface RootQueryToHomecolumnConnection {
+  __typename?: "RootQueryToHomecolumnConnection";
+  /**
+   * Edges for the RootQueryToHomecolumnConnection connection
+   */
+  edges?: Maybe<Array<Maybe<RootQueryToHomecolumnConnectionEdge>>>;
+  /**
+   * The nodes of the connection, without the edges
+   */
+  nodes?: Maybe<Array<Maybe<Homecolumn>>>;
+  /**
+   * Information about pagination in a connection.
+   */
+  pageInfo?: Maybe<WPPageInfo>;
+}
+
+/**
+ * An edge in a connection
+ */
+export interface RootQueryToHomecolumnConnectionEdge {
+  __typename?: "RootQueryToHomecolumnConnectionEdge";
+  /**
+   * A cursor for use in pagination
+   */
+  cursor?: Maybe<ScalarsEnums["String"]>;
+  /**
+   * The item at the end of the edge
+   */
+  node?: Maybe<Homecolumn>;
 }
 
 /**
@@ -19018,10 +17563,6 @@ export interface TeamMember {
    */
   id: ScalarsEnums["ID"];
   /**
-   * Added to the GraphQL Schema because the ACF Field Group &quot;Invoice Template ACF&quot; was set to Show in GraphQL.
-   */
-  invoiceTemplate?: Maybe<TeamMember_Invoicetemplate>;
-  /**
    * Whether the node is a Content Node
    */
   isContentNode: ScalarsEnums["Boolean"];
@@ -19111,89 +17652,6 @@ export interface TeamMemberToPreviewConnectionEdge {
    * The node of the connection, without the edges
    */
   node?: Maybe<TeamMember>;
-}
-
-/**
- * Field Group
- */
-export interface TeamMember_Invoicetemplate {
-  __typename?: "TeamMember_Invoicetemplate";
-  applyNow?: Maybe<ScalarsEnums["String"]>;
-  bannerDescription?: Maybe<ScalarsEnums["String"]>;
-  bannerForm?: Maybe<ScalarsEnums["String"]>;
-  bannerImage?: Maybe<MediaItem>;
-  bannerLists?: Maybe<Array<Maybe<TeamMember_Invoicetemplate_bannerLists>>>;
-  bannerTitle?: Maybe<ScalarsEnums["String"]>;
-  carouselContent?: Maybe<
-    Array<Maybe<TeamMember_Invoicetemplate_carouselContent>>
-  >;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  groupColumnOne?: Maybe<
-    Array<Maybe<TeamMember_Invoicetemplate_groupColumnOne>>
-  >;
-  groupColumnTitle?: Maybe<ScalarsEnums["String"]>;
-  groupColumnTitleTwo?: Maybe<ScalarsEnums["String"]>;
-  groupColumnTwo?: Maybe<
-    Array<Maybe<TeamMember_Invoicetemplate_groupColumnTwo>>
-  >;
-  invoiceMobileBanner?: Maybe<MediaItem>;
-}
-
-/**
- * Field Group
- */
-export interface TeamMember_Invoicetemplate_bannerLists {
-  __typename?: "TeamMember_Invoicetemplate_bannerLists";
-  bannerList?: Maybe<ScalarsEnums["String"]>;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  listTitle?: Maybe<ScalarsEnums["String"]>;
-}
-
-/**
- * Field Group
- */
-export interface TeamMember_Invoicetemplate_carouselContent {
-  __typename?: "TeamMember_Invoicetemplate_carouselContent";
-  carouselContent?: Maybe<ScalarsEnums["String"]>;
-  carouselImage?: Maybe<MediaItem>;
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-}
-
-/**
- * Field Group
- */
-export interface TeamMember_Invoicetemplate_groupColumnOne {
-  __typename?: "TeamMember_Invoicetemplate_groupColumnOne";
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  groupOneContent?: Maybe<ScalarsEnums["String"]>;
-  groupOneImage?: Maybe<MediaItem>;
-  groupOneTitle?: Maybe<ScalarsEnums["String"]>;
-}
-
-/**
- * Field Group
- */
-export interface TeamMember_Invoicetemplate_groupColumnTwo {
-  __typename?: "TeamMember_Invoicetemplate_groupColumnTwo";
-  /**
-   * The name of the ACF Field Group
-   */
-  fieldGroupName?: Maybe<ScalarsEnums["String"]>;
-  groupContent?: Maybe<ScalarsEnums["String"]>;
-  groupImage?: Maybe<MediaItem>;
-  groupTitle?: Maybe<ScalarsEnums["String"]>;
 }
 
 /**
@@ -19430,6 +17888,7 @@ export interface UniformResourceIdentifiable {
   __typename?:
     | "Category"
     | "ContentType"
+    | "Homecolumn"
     | "MediaItem"
     | "Page"
     | "Post"
@@ -19494,6 +17953,21 @@ export interface UpdateCommentPayload {
    * Whether the mutation succeeded. If the comment is not approved, the server will not return the comment to a non authenticated user, but a success message can be returned if the create succeeded, and the client can optimistically add the comment to the client cache
    */
   success?: Maybe<ScalarsEnums["Boolean"]>;
+}
+
+/**
+ * The payload for the updateHomecolumn mutation
+ */
+export interface UpdateHomecolumnPayload {
+  __typename?: "UpdateHomecolumnPayload";
+  /**
+   * If a &#039;clientMutationId&#039; input is provided to the mutation, it will be returned as output on the mutation. This ID can be used by the client to track the progress of mutations and catch possible duplicate mutation submissions.
+   */
+  clientMutationId?: Maybe<ScalarsEnums["String"]>;
+  /**
+   * The Post object mutation type.
+   */
+  homecolumn?: Maybe<Homecolumn>;
 }
 
 /**
@@ -19811,6 +18285,31 @@ export interface User {
    * First name of the user. This is equivalent to the WP_User-&gt;user_first_name property.
    */
   firstName?: Maybe<ScalarsEnums["String"]>;
+  /**
+   * Connection between the User type and the homecolumn type
+   */
+  homecolumns: (args?: {
+    /**
+     * Cursor used along with the "first" argument to reference where in the dataset to get data
+     */
+    after?: Maybe<Scalars["String"]>;
+    /**
+     * Cursor used along with the "last" argument to reference where in the dataset to get data
+     */
+    before?: Maybe<Scalars["String"]>;
+    /**
+     * The number of items to return after the referenced "after" cursor
+     */
+    first?: Maybe<Scalars["Int"]>;
+    /**
+     * The number of items to return before the referenced "before" cursor
+     */
+    last?: Maybe<Scalars["Int"]>;
+    /**
+     * Arguments for filtering the connection
+     */
+    where?: Maybe<UserToHomecolumnConnectionWhereArgs>;
+  }) => Maybe<UserToHomecolumnConnection>;
   /**
    * The globally unique identifier for the user object.
    */
@@ -20210,6 +18709,40 @@ export interface UserToEnqueuedStylesheetConnectionEdge {
 }
 
 /**
+ * Connection between the User type and the homecolumn type
+ */
+export interface UserToHomecolumnConnection {
+  __typename?: "UserToHomecolumnConnection";
+  /**
+   * Edges for the UserToHomecolumnConnection connection
+   */
+  edges?: Maybe<Array<Maybe<UserToHomecolumnConnectionEdge>>>;
+  /**
+   * The nodes of the connection, without the edges
+   */
+  nodes?: Maybe<Array<Maybe<Homecolumn>>>;
+  /**
+   * Information about pagination in a connection.
+   */
+  pageInfo?: Maybe<WPPageInfo>;
+}
+
+/**
+ * An edge in a connection
+ */
+export interface UserToHomecolumnConnectionEdge {
+  __typename?: "UserToHomecolumnConnectionEdge";
+  /**
+   * A cursor for use in pagination
+   */
+  cursor?: Maybe<ScalarsEnums["String"]>;
+  /**
+   * The item at the end of the edge
+   */
+  node?: Maybe<Homecolumn>;
+}
+
+/**
  * Connection between the User type and the mediaItem type
  */
 export interface UserToMediaItemConnection {
@@ -20463,6 +18996,9 @@ export interface Mutation {
   createComment: (args: {
     input: CreateCommentInput;
   }) => Maybe<CreateCommentPayload>;
+  createHomecolumn: (args: {
+    input: CreateHomecolumnInput;
+  }) => Maybe<CreateHomecolumnPayload>;
   createMediaItem: (args: {
     input: CreateMediaItemInput;
   }) => Maybe<CreateMediaItemPayload>;
@@ -20494,6 +19030,9 @@ export interface Mutation {
   deleteComment: (args: {
     input: DeleteCommentInput;
   }) => Maybe<DeleteCommentPayload>;
+  deleteHomecolumn: (args: {
+    input: DeleteHomecolumnInput;
+  }) => Maybe<DeleteHomecolumnPayload>;
   deleteMediaItem: (args: {
     input: DeleteMediaItemInput;
   }) => Maybe<DeleteMediaItemPayload>;
@@ -20543,6 +19082,9 @@ export interface Mutation {
   updateComment: (args: {
     input: UpdateCommentInput;
   }) => Maybe<UpdateCommentPayload>;
+  updateHomecolumn: (args: {
+    input: UpdateHomecolumnInput;
+  }) => Maybe<UpdateHomecolumnPayload>;
   updateMediaItem: (args: {
     input: UpdateMediaItemInput;
   }) => Maybe<UpdateMediaItemPayload>;
@@ -20622,6 +19164,24 @@ export interface Query {
   generalSettings?: Maybe<GeneralSettings>;
   getFooter?: Maybe<HCMSFooter>;
   getHeader?: Maybe<HCMSHeader>;
+  homecolumn: (args: {
+    asPreview?: Maybe<Scalars["Boolean"]>;
+    id: Scalars["ID"];
+    idType?: Maybe<HomecolumnIdType>;
+  }) => Maybe<Homecolumn>;
+  homecolumnBy: (args?: {
+    homecolumnId?: Maybe<Scalars["Int"]>;
+    id?: Maybe<Scalars["ID"]>;
+    slug?: Maybe<Scalars["String"]>;
+    uri?: Maybe<Scalars["String"]>;
+  }) => Maybe<Homecolumn>;
+  homecolumns: (args?: {
+    after?: Maybe<Scalars["String"]>;
+    before?: Maybe<Scalars["String"]>;
+    first?: Maybe<Scalars["Int"]>;
+    last?: Maybe<Scalars["Int"]>;
+    where?: Maybe<RootQueryToHomecolumnConnectionWhereArgs>;
+  }) => Maybe<RootQueryToHomecolumnConnection>;
   mediaItem: (args: {
     asPreview?: Maybe<Scalars["Boolean"]>;
     id: Scalars["ID"];
@@ -20926,6 +19486,7 @@ export interface SchemaObjectTypes {
   ContentTypeToTaxonomyConnectionEdge: ContentTypeToTaxonomyConnectionEdge;
   CreateCategoryPayload: CreateCategoryPayload;
   CreateCommentPayload: CreateCommentPayload;
+  CreateHomecolumnPayload: CreateHomecolumnPayload;
   CreateMediaItemPayload: CreateMediaItemPayload;
   CreatePagePayload: CreatePagePayload;
   CreatePostFormatPayload: CreatePostFormatPayload;
@@ -20940,6 +19501,7 @@ export interface SchemaObjectTypes {
   DefaultTemplate: DefaultTemplate;
   DeleteCategoryPayload: DeleteCategoryPayload;
   DeleteCommentPayload: DeleteCommentPayload;
+  DeleteHomecolumnPayload: DeleteHomecolumnPayload;
   DeleteMediaItemPayload: DeleteMediaItemPayload;
   DeletePagePayload: DeletePagePayload;
   DeletePostFormatPayload: DeletePostFormatPayload;
@@ -20964,16 +19526,13 @@ export interface SchemaObjectTypes {
   HierarchicalContentNodeToContentNodeChildrenConnection: HierarchicalContentNodeToContentNodeChildrenConnection;
   HierarchicalContentNodeToContentNodeChildrenConnectionEdge: HierarchicalContentNodeToContentNodeChildrenConnectionEdge;
   HierarchicalContentNodeToParentContentNodeConnectionEdge: HierarchicalContentNodeToParentContentNodeConnectionEdge;
+  Homecolumn: Homecolumn;
+  HomecolumnToPreviewConnectionEdge: HomecolumnToPreviewConnectionEdge;
   MediaDetails: MediaDetails;
   MediaItem: MediaItem;
   MediaItemMeta: MediaItemMeta;
   MediaItemToCommentConnection: MediaItemToCommentConnection;
   MediaItemToCommentConnectionEdge: MediaItemToCommentConnectionEdge;
-  MediaItem_Invoicetemplate: MediaItem_Invoicetemplate;
-  MediaItem_Invoicetemplate_bannerLists: MediaItem_Invoicetemplate_bannerLists;
-  MediaItem_Invoicetemplate_carouselContent: MediaItem_Invoicetemplate_carouselContent;
-  MediaItem_Invoicetemplate_groupColumnOne: MediaItem_Invoicetemplate_groupColumnOne;
-  MediaItem_Invoicetemplate_groupColumnTwo: MediaItem_Invoicetemplate_groupColumnTwo;
   MediaSize: MediaSize;
   Menu: Menu;
   MenuItem: MenuItem;
@@ -20993,41 +19552,6 @@ export interface SchemaObjectTypes {
   PageToPreviewConnectionEdge: PageToPreviewConnectionEdge;
   PageToRevisionConnection: PageToRevisionConnection;
   PageToRevisionConnectionEdge: PageToRevisionConnectionEdge;
-  Page_Aboutus: Page_Aboutus;
-  Page_Aboutus_meetTeam: Page_Aboutus_meetTeam;
-  Page_Aboutus_ourHistory: Page_Aboutus_ourHistory;
-  Page_Aboutus_ourHistoryRow: Page_Aboutus_ourHistoryRow;
-  Page_Accordiondata: Page_Accordiondata;
-  Page_Accordiondata_accordion: Page_Accordiondata_accordion;
-  Page_Acfcontact: Page_Acfcontact;
-  Page_Carouselacf: Page_Carouselacf;
-  Page_Carouselacf_carouselData: Page_Carouselacf_carouselData;
-  Page_Events: Page_Events;
-  Page_Events_Banner: Page_Events_Banner;
-  Page_Events_eventDetails: Page_Events_eventDetails;
-  Page_Invoicetemplate: Page_Invoicetemplate;
-  Page_Invoicetemplate_bannerLists: Page_Invoicetemplate_bannerLists;
-  Page_Invoicetemplate_carouselContent: Page_Invoicetemplate_carouselContent;
-  Page_Invoicetemplate_groupColumnOne: Page_Invoicetemplate_groupColumnOne;
-  Page_Invoicetemplate_groupColumnTwo: Page_Invoicetemplate_groupColumnTwo;
-  Page_Mediacenter: Page_Mediacenter;
-  Page_Mediacenter_media: Page_Mediacenter_media;
-  Page_Mediacenter_twoColumn: Page_Mediacenter_twoColumn;
-  Page_Newprob: Page_Newprob;
-  Page_Partneracf: Page_Partneracf;
-  Page_Partneracf_howItWorks: Page_Partneracf_howItWorks;
-  Page_Partneracf_threeColumn: Page_Partneracf_threeColumn;
-  Page_Productsacf: Page_Productsacf;
-  Page_Productsacf_bannerListItems: Page_Productsacf_bannerListItems;
-  Page_Productsacf_productsCards: Page_Productsacf_productsCards;
-  Page_Standardpage: Page_Standardpage;
-  Page_Successstoriesacf: Page_Successstoriesacf;
-  Page_Successstoriesacf_carouselSlider: Page_Successstoriesacf_carouselSlider;
-  Page_Successstoriesacf_pageLargeSlider: Page_Successstoriesacf_pageLargeSlider;
-  Page_Successstoriesacf_suggestedResources: Page_Successstoriesacf_suggestedResources;
-  Page_Threecolumnstaticpage: Page_Threecolumnstaticpage;
-  Page_Threecolumnstaticpage_Banner: Page_Threecolumnstaticpage_Banner;
-  Page_Threecolumnstaticpage_cards: Page_Threecolumnstaticpage_cards;
   Plugin: Plugin;
   Post: Post;
   PostFormat: PostFormat;
@@ -21052,37 +19576,16 @@ export interface SchemaObjectTypes {
   PostToTermNodeConnection: PostToTermNodeConnection;
   PostToTermNodeConnectionEdge: PostToTermNodeConnectionEdge;
   PostTypeLabelDetails: PostTypeLabelDetails;
-  Post_Blogsacf: Post_Blogsacf;
-  Post_Invoicetemplate: Post_Invoicetemplate;
-  Post_Invoicetemplate_bannerLists: Post_Invoicetemplate_bannerLists;
-  Post_Invoicetemplate_carouselContent: Post_Invoicetemplate_carouselContent;
-  Post_Invoicetemplate_groupColumnOne: Post_Invoicetemplate_groupColumnOne;
-  Post_Invoicetemplate_groupColumnTwo: Post_Invoicetemplate_groupColumnTwo;
   PressCoverage: PressCoverage;
   PressCoverageToPreviewConnectionEdge: PressCoverageToPreviewConnectionEdge;
   PressCoverageToTermNodeConnection: PressCoverageToTermNodeConnection;
   PressCoverageToTermNodeConnectionEdge: PressCoverageToTermNodeConnectionEdge;
-  PressCoverage_Invoicetemplate: PressCoverage_Invoicetemplate;
-  PressCoverage_Invoicetemplate_bannerLists: PressCoverage_Invoicetemplate_bannerLists;
-  PressCoverage_Invoicetemplate_carouselContent: PressCoverage_Invoicetemplate_carouselContent;
-  PressCoverage_Invoicetemplate_groupColumnOne: PressCoverage_Invoicetemplate_groupColumnOne;
-  PressCoverage_Invoicetemplate_groupColumnTwo: PressCoverage_Invoicetemplate_groupColumnTwo;
   PressRelease: PressRelease;
   PressReleaseToPreviewConnectionEdge: PressReleaseToPreviewConnectionEdge;
   PressReleaseToTermNodeConnection: PressReleaseToTermNodeConnection;
   PressReleaseToTermNodeConnectionEdge: PressReleaseToTermNodeConnectionEdge;
-  PressRelease_Invoicetemplate: PressRelease_Invoicetemplate;
-  PressRelease_Invoicetemplate_bannerLists: PressRelease_Invoicetemplate_bannerLists;
-  PressRelease_Invoicetemplate_carouselContent: PressRelease_Invoicetemplate_carouselContent;
-  PressRelease_Invoicetemplate_groupColumnOne: PressRelease_Invoicetemplate_groupColumnOne;
-  PressRelease_Invoicetemplate_groupColumnTwo: PressRelease_Invoicetemplate_groupColumnTwo;
   Productos: Productos;
   ProductosToPreviewConnectionEdge: ProductosToPreviewConnectionEdge;
-  Productos_Invoicetemplate: Productos_Invoicetemplate;
-  Productos_Invoicetemplate_bannerLists: Productos_Invoicetemplate_bannerLists;
-  Productos_Invoicetemplate_carouselContent: Productos_Invoicetemplate_carouselContent;
-  Productos_Invoicetemplate_groupColumnOne: Productos_Invoicetemplate_groupColumnOne;
-  Productos_Invoicetemplate_groupColumnTwo: Productos_Invoicetemplate_groupColumnTwo;
   ProductsService: ProductsService;
   ProductsServiceToPostFormatConnection: ProductsServiceToPostFormatConnection;
   ProductsServiceToPostFormatConnectionEdge: ProductsServiceToPostFormatConnectionEdge;
@@ -21091,19 +19594,6 @@ export interface SchemaObjectTypes {
   ProductsServiceToRevisionConnectionEdge: ProductsServiceToRevisionConnectionEdge;
   ProductsServiceToTermNodeConnection: ProductsServiceToTermNodeConnection;
   ProductsServiceToTermNodeConnectionEdge: ProductsServiceToTermNodeConnectionEdge;
-  ProductsService_Faqacf: ProductsService_Faqacf;
-  ProductsService_Faqacf_faqs: ProductsService_Faqacf_faqs;
-  ProductsService_Individualproducts: ProductsService_Individualproducts;
-  ProductsService_Individualproducts_bannerData: ProductsService_Individualproducts_bannerData;
-  ProductsService_Individualproducts_blogs: ProductsService_Individualproducts_blogs;
-  ProductsService_Individualproducts_groupColumn: ProductsService_Individualproducts_groupColumn;
-  ProductsService_Invoicetemplate: ProductsService_Invoicetemplate;
-  ProductsService_Invoicetemplate_bannerLists: ProductsService_Invoicetemplate_bannerLists;
-  ProductsService_Invoicetemplate_carouselContent: ProductsService_Invoicetemplate_carouselContent;
-  ProductsService_Invoicetemplate_groupColumnOne: ProductsService_Invoicetemplate_groupColumnOne;
-  ProductsService_Invoicetemplate_groupColumnTwo: ProductsService_Invoicetemplate_groupColumnTwo;
-  ProductsService_Productssubmenu: ProductsService_Productssubmenu;
-  ProductsService_Productssubmenu_menuName: ProductsService_Productssubmenu_menuName;
   Query: Query;
   ReadingSettings: ReadingSettings;
   RegisterUserPayload: RegisterUserPayload;
@@ -21123,6 +19613,8 @@ export interface SchemaObjectTypes {
   RootQueryToEnqueuedScriptConnectionEdge: RootQueryToEnqueuedScriptConnectionEdge;
   RootQueryToEnqueuedStylesheetConnection: RootQueryToEnqueuedStylesheetConnection;
   RootQueryToEnqueuedStylesheetConnectionEdge: RootQueryToEnqueuedStylesheetConnectionEdge;
+  RootQueryToHomecolumnConnection: RootQueryToHomecolumnConnection;
+  RootQueryToHomecolumnConnectionEdge: RootQueryToHomecolumnConnectionEdge;
   RootQueryToMediaItemConnection: RootQueryToMediaItemConnection;
   RootQueryToMediaItemConnectionEdge: RootQueryToMediaItemConnectionEdge;
   RootQueryToMenuConnection: RootQueryToMenuConnection;
@@ -21173,11 +19665,6 @@ export interface SchemaObjectTypes {
   TaxonomyToContentTypeConnectionEdge: TaxonomyToContentTypeConnectionEdge;
   TeamMember: TeamMember;
   TeamMemberToPreviewConnectionEdge: TeamMemberToPreviewConnectionEdge;
-  TeamMember_Invoicetemplate: TeamMember_Invoicetemplate;
-  TeamMember_Invoicetemplate_bannerLists: TeamMember_Invoicetemplate_bannerLists;
-  TeamMember_Invoicetemplate_carouselContent: TeamMember_Invoicetemplate_carouselContent;
-  TeamMember_Invoicetemplate_groupColumnOne: TeamMember_Invoicetemplate_groupColumnOne;
-  TeamMember_Invoicetemplate_groupColumnTwo: TeamMember_Invoicetemplate_groupColumnTwo;
   TermNodeToEnqueuedScriptConnection: TermNodeToEnqueuedScriptConnection;
   TermNodeToEnqueuedScriptConnectionEdge: TermNodeToEnqueuedScriptConnectionEdge;
   TermNodeToEnqueuedStylesheetConnection: TermNodeToEnqueuedStylesheetConnection;
@@ -21185,6 +19672,7 @@ export interface SchemaObjectTypes {
   Theme: Theme;
   UpdateCategoryPayload: UpdateCategoryPayload;
   UpdateCommentPayload: UpdateCommentPayload;
+  UpdateHomecolumnPayload: UpdateHomecolumnPayload;
   UpdateMediaItemPayload: UpdateMediaItemPayload;
   UpdatePagePayload: UpdatePagePayload;
   UpdatePostFormatPayload: UpdatePostFormatPayload;
@@ -21207,6 +19695,8 @@ export interface SchemaObjectTypes {
   UserToEnqueuedScriptConnectionEdge: UserToEnqueuedScriptConnectionEdge;
   UserToEnqueuedStylesheetConnection: UserToEnqueuedStylesheetConnection;
   UserToEnqueuedStylesheetConnectionEdge: UserToEnqueuedStylesheetConnectionEdge;
+  UserToHomecolumnConnection: UserToHomecolumnConnection;
+  UserToHomecolumnConnectionEdge: UserToHomecolumnConnectionEdge;
   UserToMediaItemConnection: UserToMediaItemConnection;
   UserToMediaItemConnectionEdge: UserToMediaItemConnectionEdge;
   UserToPageConnection: UserToPageConnection;
@@ -21257,6 +19747,7 @@ export type SchemaObjectTypesNames =
   | "ContentTypeToTaxonomyConnectionEdge"
   | "CreateCategoryPayload"
   | "CreateCommentPayload"
+  | "CreateHomecolumnPayload"
   | "CreateMediaItemPayload"
   | "CreatePagePayload"
   | "CreatePostFormatPayload"
@@ -21271,6 +19762,7 @@ export type SchemaObjectTypesNames =
   | "DefaultTemplate"
   | "DeleteCategoryPayload"
   | "DeleteCommentPayload"
+  | "DeleteHomecolumnPayload"
   | "DeleteMediaItemPayload"
   | "DeletePagePayload"
   | "DeletePostFormatPayload"
@@ -21295,16 +19787,13 @@ export type SchemaObjectTypesNames =
   | "HierarchicalContentNodeToContentNodeChildrenConnection"
   | "HierarchicalContentNodeToContentNodeChildrenConnectionEdge"
   | "HierarchicalContentNodeToParentContentNodeConnectionEdge"
+  | "Homecolumn"
+  | "HomecolumnToPreviewConnectionEdge"
   | "MediaDetails"
   | "MediaItem"
   | "MediaItemMeta"
   | "MediaItemToCommentConnection"
   | "MediaItemToCommentConnectionEdge"
-  | "MediaItem_Invoicetemplate"
-  | "MediaItem_Invoicetemplate_bannerLists"
-  | "MediaItem_Invoicetemplate_carouselContent"
-  | "MediaItem_Invoicetemplate_groupColumnOne"
-  | "MediaItem_Invoicetemplate_groupColumnTwo"
   | "MediaSize"
   | "Menu"
   | "MenuItem"
@@ -21324,41 +19813,6 @@ export type SchemaObjectTypesNames =
   | "PageToPreviewConnectionEdge"
   | "PageToRevisionConnection"
   | "PageToRevisionConnectionEdge"
-  | "Page_Aboutus"
-  | "Page_Aboutus_meetTeam"
-  | "Page_Aboutus_ourHistory"
-  | "Page_Aboutus_ourHistoryRow"
-  | "Page_Accordiondata"
-  | "Page_Accordiondata_accordion"
-  | "Page_Acfcontact"
-  | "Page_Carouselacf"
-  | "Page_Carouselacf_carouselData"
-  | "Page_Events"
-  | "Page_Events_Banner"
-  | "Page_Events_eventDetails"
-  | "Page_Invoicetemplate"
-  | "Page_Invoicetemplate_bannerLists"
-  | "Page_Invoicetemplate_carouselContent"
-  | "Page_Invoicetemplate_groupColumnOne"
-  | "Page_Invoicetemplate_groupColumnTwo"
-  | "Page_Mediacenter"
-  | "Page_Mediacenter_media"
-  | "Page_Mediacenter_twoColumn"
-  | "Page_Newprob"
-  | "Page_Partneracf"
-  | "Page_Partneracf_howItWorks"
-  | "Page_Partneracf_threeColumn"
-  | "Page_Productsacf"
-  | "Page_Productsacf_bannerListItems"
-  | "Page_Productsacf_productsCards"
-  | "Page_Standardpage"
-  | "Page_Successstoriesacf"
-  | "Page_Successstoriesacf_carouselSlider"
-  | "Page_Successstoriesacf_pageLargeSlider"
-  | "Page_Successstoriesacf_suggestedResources"
-  | "Page_Threecolumnstaticpage"
-  | "Page_Threecolumnstaticpage_Banner"
-  | "Page_Threecolumnstaticpage_cards"
   | "Plugin"
   | "Post"
   | "PostFormat"
@@ -21383,37 +19837,16 @@ export type SchemaObjectTypesNames =
   | "PostToTermNodeConnection"
   | "PostToTermNodeConnectionEdge"
   | "PostTypeLabelDetails"
-  | "Post_Blogsacf"
-  | "Post_Invoicetemplate"
-  | "Post_Invoicetemplate_bannerLists"
-  | "Post_Invoicetemplate_carouselContent"
-  | "Post_Invoicetemplate_groupColumnOne"
-  | "Post_Invoicetemplate_groupColumnTwo"
   | "PressCoverage"
   | "PressCoverageToPreviewConnectionEdge"
   | "PressCoverageToTermNodeConnection"
   | "PressCoverageToTermNodeConnectionEdge"
-  | "PressCoverage_Invoicetemplate"
-  | "PressCoverage_Invoicetemplate_bannerLists"
-  | "PressCoverage_Invoicetemplate_carouselContent"
-  | "PressCoverage_Invoicetemplate_groupColumnOne"
-  | "PressCoverage_Invoicetemplate_groupColumnTwo"
   | "PressRelease"
   | "PressReleaseToPreviewConnectionEdge"
   | "PressReleaseToTermNodeConnection"
   | "PressReleaseToTermNodeConnectionEdge"
-  | "PressRelease_Invoicetemplate"
-  | "PressRelease_Invoicetemplate_bannerLists"
-  | "PressRelease_Invoicetemplate_carouselContent"
-  | "PressRelease_Invoicetemplate_groupColumnOne"
-  | "PressRelease_Invoicetemplate_groupColumnTwo"
   | "Productos"
   | "ProductosToPreviewConnectionEdge"
-  | "Productos_Invoicetemplate"
-  | "Productos_Invoicetemplate_bannerLists"
-  | "Productos_Invoicetemplate_carouselContent"
-  | "Productos_Invoicetemplate_groupColumnOne"
-  | "Productos_Invoicetemplate_groupColumnTwo"
   | "ProductsService"
   | "ProductsServiceToPostFormatConnection"
   | "ProductsServiceToPostFormatConnectionEdge"
@@ -21422,19 +19855,6 @@ export type SchemaObjectTypesNames =
   | "ProductsServiceToRevisionConnectionEdge"
   | "ProductsServiceToTermNodeConnection"
   | "ProductsServiceToTermNodeConnectionEdge"
-  | "ProductsService_Faqacf"
-  | "ProductsService_Faqacf_faqs"
-  | "ProductsService_Individualproducts"
-  | "ProductsService_Individualproducts_bannerData"
-  | "ProductsService_Individualproducts_blogs"
-  | "ProductsService_Individualproducts_groupColumn"
-  | "ProductsService_Invoicetemplate"
-  | "ProductsService_Invoicetemplate_bannerLists"
-  | "ProductsService_Invoicetemplate_carouselContent"
-  | "ProductsService_Invoicetemplate_groupColumnOne"
-  | "ProductsService_Invoicetemplate_groupColumnTwo"
-  | "ProductsService_Productssubmenu"
-  | "ProductsService_Productssubmenu_menuName"
   | "Query"
   | "ReadingSettings"
   | "RegisterUserPayload"
@@ -21454,6 +19874,8 @@ export type SchemaObjectTypesNames =
   | "RootQueryToEnqueuedScriptConnectionEdge"
   | "RootQueryToEnqueuedStylesheetConnection"
   | "RootQueryToEnqueuedStylesheetConnectionEdge"
+  | "RootQueryToHomecolumnConnection"
+  | "RootQueryToHomecolumnConnectionEdge"
   | "RootQueryToMediaItemConnection"
   | "RootQueryToMediaItemConnectionEdge"
   | "RootQueryToMenuConnection"
@@ -21504,11 +19926,6 @@ export type SchemaObjectTypesNames =
   | "TaxonomyToContentTypeConnectionEdge"
   | "TeamMember"
   | "TeamMemberToPreviewConnectionEdge"
-  | "TeamMember_Invoicetemplate"
-  | "TeamMember_Invoicetemplate_bannerLists"
-  | "TeamMember_Invoicetemplate_carouselContent"
-  | "TeamMember_Invoicetemplate_groupColumnOne"
-  | "TeamMember_Invoicetemplate_groupColumnTwo"
   | "TermNodeToEnqueuedScriptConnection"
   | "TermNodeToEnqueuedScriptConnectionEdge"
   | "TermNodeToEnqueuedStylesheetConnection"
@@ -21516,6 +19933,7 @@ export type SchemaObjectTypesNames =
   | "Theme"
   | "UpdateCategoryPayload"
   | "UpdateCommentPayload"
+  | "UpdateHomecolumnPayload"
   | "UpdateMediaItemPayload"
   | "UpdatePagePayload"
   | "UpdatePostFormatPayload"
@@ -21538,6 +19956,8 @@ export type SchemaObjectTypesNames =
   | "UserToEnqueuedScriptConnectionEdge"
   | "UserToEnqueuedStylesheetConnection"
   | "UserToEnqueuedStylesheetConnectionEdge"
+  | "UserToHomecolumnConnection"
+  | "UserToHomecolumnConnectionEdge"
   | "UserToMediaItemConnection"
   | "UserToMediaItemConnectionEdge"
   | "UserToPageConnection"
@@ -21553,94 +19973,13 @@ export type SchemaObjectTypesNames =
   | "WPPageInfo"
   | "WritingSettings";
 
-export interface $AcfFieldGroup {
-  MediaItem_Invoicetemplate?: MediaItem_Invoicetemplate;
-  MediaItem_Invoicetemplate_bannerLists?: MediaItem_Invoicetemplate_bannerLists;
-  MediaItem_Invoicetemplate_carouselContent?: MediaItem_Invoicetemplate_carouselContent;
-  MediaItem_Invoicetemplate_groupColumnOne?: MediaItem_Invoicetemplate_groupColumnOne;
-  MediaItem_Invoicetemplate_groupColumnTwo?: MediaItem_Invoicetemplate_groupColumnTwo;
-  Page_Aboutus?: Page_Aboutus;
-  Page_Aboutus_meetTeam?: Page_Aboutus_meetTeam;
-  Page_Aboutus_ourHistory?: Page_Aboutus_ourHistory;
-  Page_Aboutus_ourHistoryRow?: Page_Aboutus_ourHistoryRow;
-  Page_Accordiondata?: Page_Accordiondata;
-  Page_Accordiondata_accordion?: Page_Accordiondata_accordion;
-  Page_Acfcontact?: Page_Acfcontact;
-  Page_Carouselacf?: Page_Carouselacf;
-  Page_Carouselacf_carouselData?: Page_Carouselacf_carouselData;
-  Page_Events?: Page_Events;
-  Page_Events_Banner?: Page_Events_Banner;
-  Page_Events_eventDetails?: Page_Events_eventDetails;
-  Page_Invoicetemplate?: Page_Invoicetemplate;
-  Page_Invoicetemplate_bannerLists?: Page_Invoicetemplate_bannerLists;
-  Page_Invoicetemplate_carouselContent?: Page_Invoicetemplate_carouselContent;
-  Page_Invoicetemplate_groupColumnOne?: Page_Invoicetemplate_groupColumnOne;
-  Page_Invoicetemplate_groupColumnTwo?: Page_Invoicetemplate_groupColumnTwo;
-  Page_Mediacenter?: Page_Mediacenter;
-  Page_Mediacenter_media?: Page_Mediacenter_media;
-  Page_Mediacenter_twoColumn?: Page_Mediacenter_twoColumn;
-  Page_Newprob?: Page_Newprob;
-  Page_Partneracf?: Page_Partneracf;
-  Page_Partneracf_howItWorks?: Page_Partneracf_howItWorks;
-  Page_Partneracf_threeColumn?: Page_Partneracf_threeColumn;
-  Page_Productsacf?: Page_Productsacf;
-  Page_Productsacf_bannerListItems?: Page_Productsacf_bannerListItems;
-  Page_Productsacf_productsCards?: Page_Productsacf_productsCards;
-  Page_Standardpage?: Page_Standardpage;
-  Page_Successstoriesacf?: Page_Successstoriesacf;
-  Page_Successstoriesacf_carouselSlider?: Page_Successstoriesacf_carouselSlider;
-  Page_Successstoriesacf_pageLargeSlider?: Page_Successstoriesacf_pageLargeSlider;
-  Page_Successstoriesacf_suggestedResources?: Page_Successstoriesacf_suggestedResources;
-  Page_Threecolumnstaticpage?: Page_Threecolumnstaticpage;
-  Page_Threecolumnstaticpage_Banner?: Page_Threecolumnstaticpage_Banner;
-  Page_Threecolumnstaticpage_cards?: Page_Threecolumnstaticpage_cards;
-  Post_Blogsacf?: Post_Blogsacf;
-  Post_Invoicetemplate?: Post_Invoicetemplate;
-  Post_Invoicetemplate_bannerLists?: Post_Invoicetemplate_bannerLists;
-  Post_Invoicetemplate_carouselContent?: Post_Invoicetemplate_carouselContent;
-  Post_Invoicetemplate_groupColumnOne?: Post_Invoicetemplate_groupColumnOne;
-  Post_Invoicetemplate_groupColumnTwo?: Post_Invoicetemplate_groupColumnTwo;
-  PressCoverage_Invoicetemplate?: PressCoverage_Invoicetemplate;
-  PressCoverage_Invoicetemplate_bannerLists?: PressCoverage_Invoicetemplate_bannerLists;
-  PressCoverage_Invoicetemplate_carouselContent?: PressCoverage_Invoicetemplate_carouselContent;
-  PressCoverage_Invoicetemplate_groupColumnOne?: PressCoverage_Invoicetemplate_groupColumnOne;
-  PressCoverage_Invoicetemplate_groupColumnTwo?: PressCoverage_Invoicetemplate_groupColumnTwo;
-  PressRelease_Invoicetemplate?: PressRelease_Invoicetemplate;
-  PressRelease_Invoicetemplate_bannerLists?: PressRelease_Invoicetemplate_bannerLists;
-  PressRelease_Invoicetemplate_carouselContent?: PressRelease_Invoicetemplate_carouselContent;
-  PressRelease_Invoicetemplate_groupColumnOne?: PressRelease_Invoicetemplate_groupColumnOne;
-  PressRelease_Invoicetemplate_groupColumnTwo?: PressRelease_Invoicetemplate_groupColumnTwo;
-  Productos_Invoicetemplate?: Productos_Invoicetemplate;
-  Productos_Invoicetemplate_bannerLists?: Productos_Invoicetemplate_bannerLists;
-  Productos_Invoicetemplate_carouselContent?: Productos_Invoicetemplate_carouselContent;
-  Productos_Invoicetemplate_groupColumnOne?: Productos_Invoicetemplate_groupColumnOne;
-  Productos_Invoicetemplate_groupColumnTwo?: Productos_Invoicetemplate_groupColumnTwo;
-  ProductsService_Faqacf?: ProductsService_Faqacf;
-  ProductsService_Faqacf_faqs?: ProductsService_Faqacf_faqs;
-  ProductsService_Individualproducts?: ProductsService_Individualproducts;
-  ProductsService_Individualproducts_bannerData?: ProductsService_Individualproducts_bannerData;
-  ProductsService_Individualproducts_blogs?: ProductsService_Individualproducts_blogs;
-  ProductsService_Individualproducts_groupColumn?: ProductsService_Individualproducts_groupColumn;
-  ProductsService_Invoicetemplate?: ProductsService_Invoicetemplate;
-  ProductsService_Invoicetemplate_bannerLists?: ProductsService_Invoicetemplate_bannerLists;
-  ProductsService_Invoicetemplate_carouselContent?: ProductsService_Invoicetemplate_carouselContent;
-  ProductsService_Invoicetemplate_groupColumnOne?: ProductsService_Invoicetemplate_groupColumnOne;
-  ProductsService_Invoicetemplate_groupColumnTwo?: ProductsService_Invoicetemplate_groupColumnTwo;
-  ProductsService_Productssubmenu?: ProductsService_Productssubmenu;
-  ProductsService_Productssubmenu_menuName?: ProductsService_Productssubmenu_menuName;
-  TeamMember_Invoicetemplate?: TeamMember_Invoicetemplate;
-  TeamMember_Invoicetemplate_bannerLists?: TeamMember_Invoicetemplate_bannerLists;
-  TeamMember_Invoicetemplate_carouselContent?: TeamMember_Invoicetemplate_carouselContent;
-  TeamMember_Invoicetemplate_groupColumnOne?: TeamMember_Invoicetemplate_groupColumnOne;
-  TeamMember_Invoicetemplate_groupColumnTwo?: TeamMember_Invoicetemplate_groupColumnTwo;
-}
-
 export interface $Commenter {
   CommentAuthor?: CommentAuthor;
   User?: User;
 }
 
 export interface $ContentNode {
+  Homecolumn?: Homecolumn;
   MediaItem?: MediaItem;
   Page?: Page;
   Post?: Post;
@@ -21664,6 +20003,7 @@ export interface $ContentTemplate {
 export interface $DatabaseIdentifier {
   Category?: Category;
   Comment?: Comment;
+  Homecolumn?: Homecolumn;
   MediaItem?: MediaItem;
   Menu?: Menu;
   MenuItem?: MenuItem;
@@ -21723,6 +20063,7 @@ export interface $Node {
   ContentType?: ContentType;
   EnqueuedScript?: EnqueuedScript;
   EnqueuedStylesheet?: EnqueuedStylesheet;
+  Homecolumn?: Homecolumn;
   MediaItem?: MediaItem;
   Menu?: Menu;
   MenuItem?: MenuItem;
@@ -21743,6 +20084,7 @@ export interface $Node {
 }
 
 export interface $NodeWithAuthor {
+  Homecolumn?: Homecolumn;
   MediaItem?: MediaItem;
   Page?: Page;
   Post?: Post;
@@ -21789,6 +20131,7 @@ export interface $NodeWithRevisions {
 }
 
 export interface $NodeWithTemplate {
+  Homecolumn?: Homecolumn;
   MediaItem?: MediaItem;
   Page?: Page;
   Post?: Post;
@@ -21800,6 +20143,7 @@ export interface $NodeWithTemplate {
 }
 
 export interface $NodeWithTitle {
+  Homecolumn?: Homecolumn;
   MediaItem?: MediaItem;
   Page?: Page;
   Post?: Post;
@@ -21823,6 +20167,7 @@ export interface $TermNode {
 export interface $UniformResourceIdentifiable {
   Category?: Category;
   ContentType?: ContentType;
+  Homecolumn?: Homecolumn;
   MediaItem?: MediaItem;
   Page?: Page;
   Post?: Post;
@@ -21856,6 +20201,7 @@ export interface ScalarsEnums extends MakeNullable<Scalars> {
   ContentTypesOfCategoryEnum: ContentTypesOfCategoryEnum | undefined;
   ContentTypesOfPostFormatEnum: ContentTypesOfPostFormatEnum | undefined;
   ContentTypesOfTagEnum: ContentTypesOfTagEnum | undefined;
+  HomecolumnIdType: HomecolumnIdType | undefined;
   MediaItemIdType: MediaItemIdType | undefined;
   MediaItemSizeEnum: MediaItemSizeEnum | undefined;
   MediaItemStatusEnum: MediaItemStatusEnum | undefined;

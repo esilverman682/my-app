@@ -33,13 +33,12 @@ function Hero({
       style={{ backgroundImage: bgImage ? `url(${bgImage})` : 'none' }}
       className={styles.hero}>
       <div className={styles.wrap}>
-      <motion.h1
-            
-              className="title has-text-weight-bold is-1 is-size-2-mobile is-spaced"
-              layoutId="title"     
-      >              
-        {title}
-      </motion.h1>
+        <motion.h1
+         className="title has-text-weight-bold is-1 is-size-2-mobile is-spaced"
+         layoutId="title"     
+        >              
+         {title}
+        </motion.h1>
         <div className={styles.intro}>
           <div className={styles.children}>{children}</div>
           {buttonText && buttonURL && (
